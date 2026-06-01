@@ -42,3 +42,72 @@
   .navbar-nav  li a:hover {
     color: #1abc9c !important;
   }
+
+  #where {
+  color: #ffffff; /* all text becomes white */
+}
+
+#where a {
+  color: #ffffff; /* white links */
+  text-decoration: none; /* remove underline */
+  font-weight: 600;
+}
+
+#where a:hover {
+  text-decoration: underline; /* underline on hover */
+  opacity: 0.85; /* subtle hover effect */
+}
+
+.about-wrapper {
+  max-width: 900px;        /* controls width */
+  margin: 0 auto;          /* centers the text */
+  padding: 20px 30px;      /* breathing room */
+  line-height: 1.7;        /* easier reading */
+  text-align: justify;        /* neat alignment */
+}
+
+#who h3,
+#who p {
+  color: #ffffff;
+}
+
+#what img {
+  width: 80%;        /* reduce size */
+  max-width: 280px;  /* prevent huge images on large screens */
+  margin: 0 auto;    /* center them */
+  border-radius: 8px; /* optional: modern rounded corners */
+}
+
+#what p {
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+#where .row p {
+  margin: 10px 0;
+  font-size: 16px;
+}
+
+#where span {
+  margin-right: 8px;
+}
+
+#where a {
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+#where a:hover {
+  text-decoration: underline;
+  opacity: 0.85;
+}
+
+#where .row > div {
+  margin-bottom: 15px; /* better spacing on mobile */
+}
+
+#where {
+  padding-bottom: 40px;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+}

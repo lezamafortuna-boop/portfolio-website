@@ -1,182 +1,1891 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luis Lezama – Portfolio</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Luis Lezama &mdash; Software Developer</title>
 
-    <!-- Bootstrap 5 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
 
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            deep:    '#0f172a',
+            surface: '#1a2845',
+            card:    '#1e2f52',
+            accent:  '#3b82f6',
+            emerald: '#10b981',
+            muted:   '#64748b',
+          },
+          fontFamily: {
+            inter:   ['Inter', 'sans-serif'],
+            display: ['Montserrat', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
 
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="portfolio.css">
+  <style>
+    /* ══════════════════════════════════
+       RESET & TOKENS
+    ══════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --accent:        #3b82f6;
+      --accent-glow:   rgba(59,130,246,0.4);
+      --emerald:       #10b981;
+      --bg:            #111c35;
+      --card-bg:       rgba(26,40,69,0.80);
+      --border:        rgba(255,255,255,0.10);
+      --border-hover:  rgba(59,130,246,0.32);
+      --fl-color:      rgba(5,10,22,0.72);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--bg);
+      color: #e2e8f0;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      cursor: none;
+    }
+
+    /* ══════════════════════════════════
+       CUSTOM CURSOR
+    ══════════════════════════════════ */
+    #cursor-dot {
+      position: fixed;
+      top: 0; left: 0;
+      width: 8px; height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%,-50%);
+      transition: width .18s, height .18s, background .18s;
+      mix-blend-mode: screen;
+    }
+    #cursor-ring {
+      position: fixed;
+      top: 0; left: 0;
+      width: 38px; height: 38px;
+      border: 1.5px solid rgba(59,130,246,.45);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%,-50%);
+      transition: width .32s cubic-bezier(.4,0,.2,1),
+                  height .32s cubic-bezier(.4,0,.2,1),
+                  border-color .2s, opacity .2s;
+    }
+    body.c-hover #cursor-dot { width:5px; height:5px; background:#fff; }
+    body.c-hover #cursor-ring {
+      width:54px; height:54px;
+      border-color:rgba(59,130,246,.65);
+      background:rgba(59,130,246,.03);
+    }
+    @media (max-width: 768px) {
+      body { cursor: auto; }
+      #cursor-dot, #cursor-ring { display: none; }
+    }
+
+    /* ══════════════════════════════════
+       GRID BG
+    ══════════════════════════════════ */
+    .grid-bg {
+      background-image:
+        linear-gradient(rgba(255,255,255,.014) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.014) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    /* ══════════════════════════════════
+       GLASSMORPHISM
+    ══════════════════════════════════ */
+    .glass {
+      background: rgba(24,38,75,.62);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border);
+    }
+    .glass-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border);
+      transition: background .4s, border-color .4s,
+                  transform .4s cubic-bezier(.4,0,.2,1),
+                  box-shadow .4s;
+      will-change: transform;
+    }
+    .glass-card:hover {
+      background: rgba(59,130,246,.055);
+      border-color: var(--border-hover);
+      box-shadow: 0 24px 56px rgba(59,130,246,.11),
+                  0 0 0 1px rgba(59,130,246,.07);
+    }
+
+    /* ══════════════════════════════════
+       GRADIENT TEXT
+    ══════════════════════════════════ */
+    .gradient-text {
+      background: linear-gradient(135deg,#60a5fa 0%,#34d399 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .gradient-text-anim {
+      background: linear-gradient(135deg,#60a5fa,#34d399,#a78bfa,#60a5fa);
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: grad-shift 6s ease infinite;
+    }
+    @keyframes grad-shift {
+      0%   { background-position: 0%   50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0%   50%; }
+    }
+
+    /* ══════════════════════════════════
+       SECTION LABEL
+    ══════════════════════════════════ */
+    .section-label {
+      font-size: .68rem;
+      font-weight: 700;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+    }
+    .section-label::before {
+      content: '';
+      display: inline-block;
+      width: 18px; height: 1px;
+      background: var(--accent);
+    }
+
+    /* ══════════════════════════════════
+       TAGS
+    ══════════════════════════════════ */
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      background: rgba(59,130,246,.08);
+      border: 1px solid rgba(59,130,246,.2);
+      color: #93c5fd;
+      font-size: .7rem; font-weight: 600;
+      padding: 3px 11px;
+      border-radius: 9999px;
+      white-space: nowrap;
+      letter-spacing: .02em;
+    }
+    .tag-green  { background:rgba(16,185,129,.08);  border-color:rgba(16,185,129,.22);  color:#6ee7b7; }
+    .tag-amber  { background:rgba(245,158,11,.08);  border-color:rgba(245,158,11,.22);  color:#fcd34d; }
+    .tag-purple { background:rgba(139,92,246,.08);  border-color:rgba(139,92,246,.22);  color:#c4b5fd; }
+
+    /* ══════════════════════════════════
+       BUTTONS
+    ══════════════════════════════════ */
+    .btn-primary {
+      background: linear-gradient(135deg,#3b82f6,#2563eb);
+      box-shadow: 0 4px 20px rgba(59,130,246,.32);
+      transition: transform .25s, box-shadow .25s, filter .25s;
+      position: relative; overflow: hidden;
+    }
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      top:0; left:-100%; width:100%; height:100%;
+      background: linear-gradient(90deg,transparent,rgba(255,255,255,.1),transparent);
+      transition: left .5s;
+    }
+    .btn-primary:hover::before { left:100%; }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(59,130,246,.52);
+      filter: brightness(1.06);
+    }
+    .btn-primary:active { transform:translateY(0); }
+
+    .btn-outline {
+      border: 1px solid rgba(255,255,255,.11);
+      transition: border-color .3s, background .3s, box-shadow .3s;
+    }
+    .btn-outline:hover {
+      border-color: rgba(59,130,246,.48);
+      background: rgba(59,130,246,.055);
+      box-shadow: 0 0 24px rgba(59,130,246,.09);
+    }
+
+    /* ══════════════════════════════════
+       PHOTO RING
+    ══════════════════════════════════ */
+    .photo-ring {
+      background: conic-gradient(from 0deg at 50% 50%,#3b82f6 0%,#10b981 33%,#a78bfa 66%,#3b82f6 100%);
+      border-radius: 50%;
+      padding: 3px;
+      animation: ring-spin 8s linear infinite;
+    }
+    @keyframes ring-spin {
+      to { filter: hue-rotate(360deg); }
+    }
+
+    /* ══════════════════════════════════
+       TIMELINE
+    ══════════════════════════════════ */
+    .tl-wrap { position:relative; padding-left:2.25rem; }
+    .tl-wrap::before {
+      content:'';
+      position:absolute; left:7px; top:14px; bottom:14px;
+      width:2px;
+      background:linear-gradient(to bottom,var(--accent),rgba(59,130,246,.0));
+      border-radius:2px;
+    }
+    .tl-item { position:relative; }
+    .tl-dot {
+      position:absolute;
+      left:-2.08rem; top:1.55rem;
+      width:14px; height:14px;
+      background:var(--bg);
+      border:2px solid var(--accent);
+      border-radius:50%;
+      box-shadow:0 0 14px rgba(59,130,246,.7),0 0 28px rgba(59,130,246,.22);
+      transition:box-shadow .3s;
+      z-index:1;
+    }
+    .tl-item:hover .tl-dot {
+      box-shadow:0 0 22px rgba(59,130,246,1),0 0 44px rgba(59,130,246,.38);
+    }
+
+    /* ══════════════════════════════════
+       NAVBAR
+    ══════════════════════════════════ */
+    #navbar { transition: background .4s, box-shadow .4s; }
+    #navbar.scrolled {
+      background: rgba(8,11,20,.97) !important;
+      box-shadow: 0 1px 0 rgba(255,255,255,.04);
+    }
+    .nav-link {
+      position:relative; color:#94a3b8; font-size:.875rem;
+      transition:color .2s;
+    }
+    .nav-link::after {
+      content:''; position:absolute; bottom:-2px; left:0;
+      width:0; height:1px; background:var(--accent);
+      transition:width .3s;
+    }
+    .nav-link:hover            { color:#fff; }
+    .nav-link:hover::after,
+    .nav-link.active::after    { width:100%; }
+    .nav-link.active           { color:#fff; }
+
+    /* ══════════════════════════════════
+       SCROLL REVEAL
+    ══════════════════════════════════ */
+    .reveal {
+      opacity:0;
+      transform:translateY(30px);
+      transition:opacity .7s cubic-bezier(.4,0,.2,1),
+                 transform .7s cubic-bezier(.4,0,.2,1);
+    }
+    .reveal.visible { opacity:1; transform:translateY(0); }
+    .reveal-left {
+      opacity:0; transform:translateX(-30px);
+      transition:opacity .7s cubic-bezier(.4,0,.2,1),
+                 transform .7s cubic-bezier(.4,0,.2,1);
+    }
+    .reveal-left.visible { opacity:1; transform:translateX(0); }
+    .reveal-scale {
+      opacity:0; transform:scale(.93);
+      transition:opacity .7s cubic-bezier(.4,0,.2,1),
+                 transform .7s cubic-bezier(.4,0,.2,1);
+    }
+    .reveal-scale.visible { opacity:1; transform:scale(1); }
+    .d1{transition-delay:.10s} .d2{transition-delay:.20s}
+    .d3{transition-delay:.30s} .d4{transition-delay:.40s}
+    .d5{transition-delay:.50s} .d6{transition-delay:.60s}
+
+    /* ══════════════════════════════════
+       SPLIT TEXT
+    ══════════════════════════════════ */
+    .split-char {
+      display:inline-block;
+      opacity:0;
+      transform:translateY(105%);
+      transition:opacity .55s cubic-bezier(.4,0,.2,1),
+                 transform .55s cubic-bezier(.4,0,.2,1);
+    }
+    .split-char.visible { opacity:1; transform:translateY(0); }
+
+    /* ══════════════════════════════════
+       HERO
+    ══════════════════════════════════ */
+    #particles-canvas {
+      position:absolute; inset:0;
+      pointer-events:none; z-index:1;
+    }
+    .hero-glow {
+      background:
+        radial-gradient(ellipse 80% 50% at 50% -5%,rgba(59,130,246,.13) 0%,transparent 60%),
+        radial-gradient(ellipse 50% 40% at 85% 78%,rgba(16,185,129,.07) 0%,transparent 55%);
+    }
+    @keyframes badge-float {
+      0%,100% { transform:translateY(0); }
+      50%     { transform:translateY(-5px); }
+    }
+    .hero-badge { animation:badge-float 4s ease-in-out infinite; }
+
+    /* ══════════════════════════════════
+       STATS
+    ══════════════════════════════════ */
+    .stat-num {
+      font-family:'Montserrat',sans-serif;
+      font-weight:900; font-size:1.75rem; line-height:1;
+    }
+
+    /* ══════════════════════════════════
+       FLOATING BADGES (about)
+    ══════════════════════════════════ */
+    @keyframes fl1 {
+      0%,100%{transform:translateY(0) rotate(-2deg)}
+      50%    {transform:translateY(-9px) rotate(2deg)}
+    }
+    @keyframes fl2 {
+      0%,100%{transform:translateY(0) rotate(3deg)}
+      50%    {transform:translateY(-11px) rotate(-1deg)}
+    }
+    .fl1 { animation:fl1 5s ease-in-out infinite; }
+    .fl2 { animation:fl2 6.5s ease-in-out infinite; }
+
+    /* ══════════════════════════════════
+       PROJECT CARDS
+    ══════════════════════════════════ */
+    .project-card {
+      background:var(--card-bg);
+      backdrop-filter:blur(20px);
+      -webkit-backdrop-filter:blur(20px);
+      border:1px solid var(--border);
+      transition:border-color .4s, box-shadow .4s;
+      transform-style:preserve-3d;
+      will-change:transform;
+    }
+    .project-card:hover {
+      border-color:rgba(59,130,246,.28);
+      box-shadow:0 28px 60px rgba(59,130,246,.1),
+                 0 0 0 1px rgba(59,130,246,.06);
+    }
+    .proj-img { overflow:hidden; position:relative; }
+    .proj-img img { transition:transform .6s cubic-bezier(.4,0,.2,1); }
+    .project-card:hover .proj-img img { transform:scale(1.06); }
+    .proj-overlay {
+      position:absolute; inset:0;
+      background:linear-gradient(to top,rgba(8,11,20,.9) 0%,rgba(8,11,20,.25) 50%,transparent 100%);
+    }
+
+    /* ══════════════════════════════════
+       STATUS DOTS
+    ══════════════════════════════════ */
+    .dot-live {
+      display:inline-block; width:7px; height:7px;
+      border-radius:50%; background:#10b981;
+      box-shadow:0 0 8px rgba(16,185,129,.8);
+      animation:pulse-dot 2s ease infinite;
+    }
+    .dot-amber {
+      background:#f59e0b;
+      box-shadow:0 0 8px rgba(245,158,11,.8);
+    }
+    @keyframes pulse-dot {
+      0%,100%{opacity:1;transform:scale(1)}
+      50%    {opacity:.55;transform:scale(.82)}
+    }
+    @keyframes ping {
+      75%,100%{transform:scale(2.2);opacity:0}
+    }
+    .ping { animation:ping 1.5s cubic-bezier(0,0,.2,1) infinite; }
+
+    /* ══════════════════════════════════
+       DIVIDER / SHIMMER
+    ══════════════════════════════════ */
+    .divider {
+      height:1px;
+      background:linear-gradient(to right,transparent,rgba(255,255,255,.05),transparent);
+    }
+    @keyframes shimmer {
+      0%  {background-position:-100% 0}
+      100%{background-position:200% 0}
+    }
+    .shimmer-line {
+      height:1px;
+      background:linear-gradient(90deg,
+        transparent 0%,rgba(59,130,246,.55) 40%,rgba(16,185,129,.35) 60%,transparent 100%);
+      background-size:200% 100%;
+      animation:shimmer 3.5s linear infinite;
+    }
+
+    /* ══════════════════════════════════
+       SKILL BARS
+    ══════════════════════════════════ */
+    .skill-track {
+      height:3px; background:rgba(255,255,255,.06);
+      border-radius:9999px; overflow:hidden;
+    }
+    .skill-fill {
+      height:100%; border-radius:9999px;
+      background:linear-gradient(90deg,var(--accent),var(--emerald));
+      transform:scaleX(0); transform-origin:left;
+      transition:transform 1.3s cubic-bezier(.4,0,.2,1);
+    }
+    .skill-fill.go { transform:scaleX(1); }
+
+    /* ══════════════════════════════════
+       FORM
+    ══════════════════════════════════ */
+    .form-field {
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.07);
+      color:#e2e8f0; width:100%;
+      padding:.8rem 1rem; border-radius:.7rem;
+      outline:none; font-family:'Inter',sans-serif; font-size:.9rem;
+      transition:border-color .25s, box-shadow .25s, background .25s;
+    }
+    .form-field::placeholder { color:#334155; }
+    .form-field:focus {
+      border-color:rgba(59,130,246,.5);
+      box-shadow:0 0 0 3px rgba(59,130,246,.08);
+      background:rgba(255,255,255,.05);
+    }
+
+    /* ══════════════════════════════════
+       AMBIENT ORBS
+    ══════════════════════════════════ */
+    @keyframes orb-float {
+      0%,100%{transform:translate(0,0) scale(1);opacity:.28}
+      33%    {transform:translate(22px,-18px) scale(1.06);opacity:.42}
+      66%    {transform:translate(-14px,12px) scale(.95);opacity:.3}
+    }
+    .orb   { animation:orb-float 11s ease-in-out infinite; }
+    .orb-2 { animation:orb-float 15s ease-in-out infinite; animation-delay:3.5s; }
+    .orb-3 { animation:orb-float 19s ease-in-out infinite; animation-delay:7s; }
+
+    /* ══════════════════════════════════
+       SCROLLBAR
+    ══════════════════════════════════ */
+    ::-webkit-scrollbar       { width:4px; }
+    ::-webkit-scrollbar-track { background:var(--bg); }
+    ::-webkit-scrollbar-thumb { background:#1e293b; border-radius:2px; }
+    ::-webkit-scrollbar-thumb:hover { background:var(--accent); }
+
+    /* ══════════════════════════════════
+       EXPERTISE ICON HOVER
+    ══════════════════════════════════ */
+    .exp-icon { transition:transform .3s cubic-bezier(.4,0,.2,1); }
+    .glass-card:hover .exp-icon { transform:scale(1.14) rotate(-4deg); }
+
+    /* ══════════════════════════════════
+       GLOW BORDER ON HOVER
+    ══════════════════════════════════ */
+    .glow-wrap { position:relative; }
+    .glow-wrap::before {
+      content:''; position:absolute; inset:-1px;
+      border-radius:inherit;
+      background:linear-gradient(135deg,rgba(59,130,246,.25),rgba(16,185,129,.12),transparent);
+      z-index:-1; opacity:0; transition:opacity .4s;
+    }
+    .glow-wrap:hover::before { opacity:1; }
+
+    /* ══════════════════════════════════
+       REDUCED MOTION
+    ══════════════════════════════════ */
+    @media (prefers-reduced-motion:reduce) {
+      *,*::before,*::after {
+        animation-duration:.01ms !important;
+        transition-duration:.01ms !important;
+      }
+      .reveal,.reveal-left,.reveal-scale { opacity:1!important; transform:none!important; }
+    }
+
+    @media (max-width:768px) {
+      .glass-card:hover { transform:none; }
+    }
+
+    /* ══════════════════════════════════
+       FLASHLIGHT CURSOR
+    ══════════════════════════════════ */
+    #flashlight {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      pointer-events: none;
+      background: radial-gradient(circle 480px at -9999px -9999px,
+        transparent 0%,
+        var(--fl-color) 65%
+      );
+    }
+    @media (hover: none) { #flashlight { display: none; } }
+
+
+    /* ══════════════════════════════════
+       LIGHT MODE — AMETHYST
+    ══════════════════════════════════ */
+    html.light {
+      --bg:           #ede6ff;
+      --card-bg:      rgba(255,255,255,0.90);
+      --border:       rgba(109,40,217,0.13);
+      --border-hover: rgba(109,40,217,0.32);
+      --fl-color:     rgba(237,230,255,0.58);
+    }
+    html.light body {
+      background-color: #ede6ff;
+      color: #1a082e;
+    }
+    html.light .grid-bg {
+      background-image:
+        linear-gradient(rgba(109,40,217,.038) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(109,40,217,.038) 1px, transparent 1px);
+    }
+    html.light .hero-glow {
+      background:
+        radial-gradient(ellipse 80% 50% at 50% -5%, rgba(124,58,237,.14) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 40% at 85% 78%, rgba(16,185,129,.09) 0%, transparent 55%);
+    }
+    html.light .glass {
+      background: rgba(255,255,255,.75);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-color: rgba(109,40,217,.15);
+    }
+    html.light .glass-card {
+      background: rgba(255,255,255,.90);
+      border-color: rgba(109,40,217,.13);
+    }
+    html.light .glass-card:hover {
+      background: rgba(109,40,217,.04);
+      border-color: rgba(109,40,217,.30);
+      box-shadow: 0 24px 56px rgba(109,40,217,.10), 0 0 0 1px rgba(109,40,217,.07);
+    }
+    html.light .project-card {
+      background: rgba(255,255,255,.90);
+      border-color: rgba(109,40,217,.13);
+    }
+    html.light .project-card:hover {
+      border-color: rgba(109,40,217,.28);
+      box-shadow: 0 28px 60px rgba(109,40,217,.10), 0 0 0 1px rgba(109,40,217,.07);
+    }
+    /* gradient text */
+    html.light .gradient-text {
+      background: linear-gradient(135deg,#7c3aed 0%,#059669 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    html.light .gradient-text-anim {
+      background: linear-gradient(135deg,#7c3aed,#059669,#3b82f6,#7c3aed);
+      background-size: 300% 300%;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    /* text overrides */
+    html.light .text-white  { color: #1a082e; }
+    html.light .text-slate-300 { color: #3b1f60; }
+    html.light .text-slate-400 { color: #6b5490; }
+    html.light .text-slate-500 { color: #7d648a; }
+    html.light .text-slate-600 { color: #9980aa; }
+    html.light .text-slate-700 { color: #a890b8; }
+    /* keep button text white */
+    html.light .btn-primary,
+    html.light .btn-primary * { color: #fff !important; -webkit-text-fill-color: #fff !important; }
+    /* nav */
+    html.light .section-label { color: #7c3aed; }
+    html.light .section-label::before { background: #7c3aed; }
+    html.light .nav-link { color: #6b5490; }
+    html.light .nav-link:hover, html.light .nav-link.active { color: #1a082e; }
+    html.light .nav-link::after { background: #7c3aed; }
+    html.light #navbar.scrolled { background: rgba(237,230,255,.97) !important; }
+    /* timeline */
+    html.light .tl-wrap::before {
+      background: linear-gradient(to bottom,#7c3aed,rgba(124,58,237,0));
+    }
+    html.light .tl-dot {
+      background: #ede6ff;
+      border-color: #7c3aed;
+      box-shadow: 0 0 14px rgba(124,58,237,.55), 0 0 28px rgba(124,58,237,.2);
+    }
+    html.light .tl-item:hover .tl-dot {
+      box-shadow: 0 0 22px rgba(124,58,237,.9), 0 0 44px rgba(124,58,237,.35);
+    }
+    html.light .shimmer-line {
+      background: linear-gradient(90deg,transparent,rgba(124,58,237,.5),rgba(5,150,105,.3),transparent);
+      background-size: 200% 100%;
+    }
+    html.light .skill-fill { background: linear-gradient(90deg,#7c3aed,#059669); }
+    /* form */
+    html.light .form-field {
+      background: rgba(255,255,255,.85);
+      border-color: rgba(109,40,217,.18);
+      color: #1a082e;
+    }
+    html.light .form-field::placeholder { color: #a890b8; }
+    html.light .form-field:focus {
+      border-color: rgba(109,40,217,.5);
+      box-shadow: 0 0 0 3px rgba(109,40,217,.08);
+      background: #fff;
+    }
+    /* misc */
+    html.light .divider { background: linear-gradient(to right,transparent,rgba(0,0,0,.08),transparent); }
+    html.light footer   { border-color: rgba(109,40,217,.1); }
+    html.light ::-webkit-scrollbar-track { background: #ede6ff; }
+    html.light ::-webkit-scrollbar-thumb { background: #c4aee8; }
+    html.light ::-webkit-scrollbar-thumb:hover { background: #7c3aed; }
+    /* tags */
+    html.light .tag        { background:rgba(109,40,217,.08); border-color:rgba(109,40,217,.22); color:#5b21b6; }
+    html.light .tag-green  { background:rgba(5,150,105,.08);  border-color:rgba(5,150,105,.22);  color:#065f46; }
+    html.light .tag-amber  { background:rgba(180,83,9,.08);   border-color:rgba(180,83,9,.22);   color:#92400e; }
+    html.light .tag-purple { background:rgba(109,40,217,.08); border-color:rgba(109,40,217,.22); color:#5b21b6; }
+    html.light [class*="text-amber-400"] { color: #92400e; }
+    /* photo ring keep as-is (looks great on both) */
+    /* orbs */
+    html.light .orb   { background: rgba(124,58,237,.03) !important; }
+    html.light .orb-2 { background: rgba(16,185,129,.03) !important; }
+    html.light .orb-3 { background: rgba(59,130,246,.025) !important; }
+    /* code snippet floaters */
+    html.light #parallax-hero .glass { border-color: rgba(109,40,217,.12); }
+    /* stat highlight */
+    html.light .stat-num.gradient-text { /* inherit gradient-text override */ }
+
+
+    /* Adaptive highlight — readable on dark & light */
+    .highlight-strong { color: #e2e8f0; }
+    html.light .highlight-strong { color: #0369a1; }
+
+  </style>
 </head>
 
-<body>
+<body class="grid-bg">
 
-<!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-    <div class="container">
-        <a class="navbar-brand fw-bold" href="#">Luis Lezama</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+<!-- ── CURSOR ── -->
+<div id="cursor-dot"></div>
+<div id="cursor-ring"></div>
+<div id="flashlight"></div>
 
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
-                <li class="nav-item"><a class="nav-link" href="#skills">Skills</a></li>
-                <li class="nav-item"><a class="nav-link" href="#projects">Projects</a></li>
-                <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
-            </ul>
-        </div>
+
+<!-- ══════════════════════════════════
+     NAVBAR
+══════════════════════════════════ -->
+<nav id="navbar" class="fixed top-0 left-0 right-0 z-50 glass">
+  <div class="max-w-6xl mx-auto px-5 sm:px-8 py-4 flex items-center justify-between">
+
+    <a href="#home" class="flex items-center gap-3 group">
+      <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center font-display font-black text-[12px] text-white shadow-lg shadow-blue-600/30 group-hover:shadow-blue-600/55 transition-shadow">
+        LL
+      </div>
+      <span class="font-display font-bold text-white hidden sm:block tracking-tight text-sm">Luis Lezama</span>
+    </a>
+
+    <div class="hidden md:flex items-center gap-7">
+      <a href="#about"     class="nav-link">About</a>
+      <a href="#journey"   class="nav-link">Journey</a>
+      <a href="#founder"   class="nav-link">Founder</a>
+      <a href="#expertise" class="nav-link">Expertise</a>
+      <a href="#projects"  class="nav-link">Projects</a>
+      <a href="#contact"   class="nav-link">Contact</a>
+      <button id="themeToggle" class="glass px-3 py-2 rounded-lg text-slate-400 hover:text-white transition-colors flex items-center gap-1.5" aria-label="Toggle theme">
+        <svg id="iconSun"  width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        <svg id="iconMoon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <a href="#contact"   class="btn-primary text-sm text-white px-5 py-2.5 rounded-lg font-semibold">Hire Me</a>
     </div>
+
+    <button id="menuBtn" class="md:hidden p-1 text-slate-400 hover:text-white" aria-label="Toggle menu">
+      <svg id="iconOpen"  width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      <svg id="iconClose" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+
+  <div id="mobileMenu" style="display:none" class="md:hidden px-5 pb-5 flex flex-col gap-1 border-t border-white/5 mt-1">
+    <a href="#about"     class="text-sm text-slate-400 hover:text-white py-3 border-b border-white/5 transition-colors">About</a>
+    <a href="#journey"   class="text-sm text-slate-400 hover:text-white py-3 border-b border-white/5 transition-colors">Journey</a>
+    <a href="#founder"   class="text-sm text-slate-400 hover:text-white py-3 border-b border-white/5 transition-colors">Founder</a>
+    <a href="#expertise" class="text-sm text-slate-400 hover:text-white py-3 border-b border-white/5 transition-colors">Expertise</a>
+    <a href="#projects"  class="text-sm text-slate-400 hover:text-white py-3 border-b border-white/5 transition-colors">Projects</a>
+    <a href="#contact"   class="text-sm text-slate-400 hover:text-white py-3 border-b border-white/5 transition-colors">Contact</a>
+    <button id="themeToggleMobile" class="text-sm text-slate-400 hover:text-white py-3 text-left flex items-center gap-2 transition-colors">
+      <svg id="iconSunMobile"  width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      <svg id="iconMoonMobile" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <span id="themeLabel">Light Mode</span>
+    </button>
+  </div>
 </nav>
 
-<!-- HERO SECTION -->
-<header class="hero d-flex align-items-center text-center text-light">
-    <div class="container">
-        <img src="./Images/Luis1.jpg" class="rounded-circle mb-4 hero-img" alt="Luis">
-        <h1 class="fw-bold">Luis Alberto Lezama Fortuna</h1>
-        <p class="lead">Software Development Student • Red Seal Chef • Creative Problem Solver</p>
-    </div>
-</header>
 
-<!-- ABOUT SECTION -->
-<section id="about" class="py-5 bg-light">
-    <div class="container">
-        <h2 class="text-center mb-4">About Me</h2>
-        <p class="lead text-center mb-5">
-            A unique blend of technology, creativity, and resilience — shaped by a life lived across Mexico and Canada.
+<!-- ══════════════════════════════════
+     HERO
+══════════════════════════════════ -->
+<section id="home" class="relative min-h-screen flex items-center justify-center hero-glow overflow-hidden">
+
+  <canvas id="particles-canvas"></canvas>
+
+  <div class="orb   absolute top-1/3  left-1/5  w-[580px] h-[580px] bg-blue-500/[0.03]    rounded-full blur-3xl pointer-events-none"></div>
+  <div class="orb-2 absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-emerald-500/[0.03] rounded-full blur-3xl pointer-events-none"></div>
+  <div class="orb-3 absolute top-1/2  right-[10%] w-[280px] h-[280px] bg-violet-500/[0.025] rounded-full blur-3xl pointer-events-none"></div>
+
+  <!-- Floating code snippets (parallax layer) -->
+  <div id="parallax-hero" class="absolute inset-0 pointer-events-none z-[2]">
+    <div class="absolute top-[22%] left-[6%] glass rounded-xl px-3 py-2 text-[.62rem] font-mono text-blue-400/55 border border-blue-500/10 hidden lg:block"
+         style="animation:fl1 7s ease-in-out infinite">const dev = new Luis()</div>
+    <div class="absolute bottom-[28%] right-[7%] glass rounded-xl px-3 py-2 text-[.62rem] font-mono text-emerald-400/55 border border-emerald-500/10 hidden lg:block"
+         style="animation:fl2 8.5s ease-in-out infinite;animation-delay:2s">git commit -m "ship it"</div>
+    <div class="absolute top-[62%] left-[4%] glass rounded-xl px-3 py-2 text-[.62rem] font-mono text-violet-400/55 border border-violet-500/10 hidden lg:block"
+         style="animation:fl1 9s ease-in-out infinite;animation-delay:1.2s">&lt;/code&gt; meets 🍳</div>
+  </div>
+
+  <div class="relative z-10 max-w-5xl mx-auto px-5 sm:px-8 pt-28 pb-20 text-center">
+
+    <!-- Status badge -->
+    <div class="hero-badge inline-flex items-center gap-2.5 glass px-4 py-2 rounded-full mb-9 text-sm text-slate-400">
+      <span class="relative flex items-center gap-1.5">
+        <span class="ping absolute inline-flex h-2 w-2 rounded-full bg-emerald-400 opacity-75"></span>
+        <span class="dot-live"></span>
+      </span>
+      Available for opportunities &nbsp;&middot;&nbsp; Vancouver, BC
+    </div>
+
+    <!-- Split-text headline -->
+    <h1 id="hero-title" class="font-display font-black text-[clamp(2.8rem,8vw,6rem)] text-white leading-[1.05] tracking-tight mb-7">
+      <span class="split-line block overflow-hidden">Where Code</span>
+      <span class="split-line block overflow-hidden gradient-text-anim">Meets Craft</span>
+    </h1>
+
+    <p class="text-lg sm:text-xl text-slate-400 max-w-xl mx-auto mb-11 leading-relaxed reveal d1">
+      Software Developer &amp; Red Seal Chef &mdash;
+      <span class="text-slate-300">precision from the kitchen,</span>
+      applied to every line of code.
+    </p>
+
+    <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16 reveal d2">
+      <a href="#projects" class="btn-primary text-white px-9 py-3.5 rounded-xl font-semibold text-[.95rem] w-full sm:w-auto flex items-center justify-center gap-2">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
+        View My Work
+      </a>
+      <a href="#contact" class="btn-outline text-white px-9 py-3.5 rounded-xl font-semibold text-[.95rem] w-full sm:w-auto flex items-center justify-center gap-2">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Let's Talk
+      </a>
+    </div>
+  </div>
+  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-slate-700">
+    <span class="text-[.55rem] tracking-[.25em] uppercase">Scroll</span>
+    <div class="w-px h-12 bg-gradient-to-b from-slate-600 to-transparent"></div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════
+     ABOUT
+══════════════════════════════════ -->
+<section id="about" class="relative py-32">
+  <div class="divider absolute top-0 inset-x-0"></div>
+
+  <div class="max-w-6xl mx-auto px-5 sm:px-8">
+    <div class="grid lg:grid-cols-2 gap-16 items-center">
+
+      <!-- Photo -->
+      <div class="reveal-left flex justify-center lg:justify-start">
+        <div class="relative flex-shrink-0">
+          <div class="absolute inset-0 rounded-[50%] bg-blue-500/[.07] blur-2xl scale-125 pointer-events-none"></div>
+          <div class="photo-ring w-56 h-72 sm:w-64 sm:h-80 relative">
+            <img
+              src="./Images/Luis1.jpg"
+              alt="Luis Lezama"
+              class="w-full h-full object-cover object-[center_8%] rounded-full"
+              onerror="this.parentNode.innerHTML='<div style=\'width:100%;height:100%;border-radius:50%;background:linear-gradient(135deg,rgba(59,130,246,.1),rgba(16,185,129,.1));display:flex;align-items:center;justify-content:center\'><span style=\'font-family:Montserrat,sans-serif;font-weight:900;font-size:3rem;color:rgba(255,255,255,.1)\'>LL</span></div>'"
+            >
+          </div>
+          <div class="fl1 absolute -top-4 -right-4 glass rounded-2xl p-3.5 border border-blue-500/14 shadow-xl shadow-blue-500/5">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          </div>
+          <div class="fl2 absolute -bottom-4 -left-4 glass rounded-2xl p-3.5 border border-emerald-500/14 shadow-xl shadow-emerald-500/5">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="1.8"><path d="M3 2h1l1 5-2.5 3A19 19 0 0 0 12 20a19 19 0 0 0 9.5-10L19 7l1-5h1"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Text -->
+      <div>
+        <div class="section-label mb-4 reveal">About Me</div>
+        <h2 class="font-display font-black text-[clamp(2rem,4vw,3rem)] text-white leading-tight mb-6 reveal d1">
+          A Developer with<br><span class="gradient-text">Uncommon Depth</span>
+        </h2>
+        <p class="text-slate-400 leading-[1.85] mb-5 reveal d2 text-[.95rem]">
+          My journey started at 12 in Mexico, writing my first programs. Two decades later
+          I've stacked a Computer Science degree, a UBC Biochemistry stint, and a
+          nationally recognized Red Seal Chef certification &mdash; and I'm now channeling
+          every chapter into software development.
         </p>
-
-        <div class="row">
-            <div class="col-lg-10 mx-auto">
-                <p>My path through education and career has been anything but conventional—and I wouldn't have it any other way. It all began when I was just 12 years old in Mexico, where I enrolled in a Computer Systems Technician program. By the time I was 15, I had completed the course, laying the groundwork for a lifelong interest in technology.</p>
-
-                <p>In 2006, I earned my degree in Computer Science with a focus on Information Systems. During my university years, I worked in the IT department of the Mexican government, gaining hands-on experience in public sector technology and administration.</p>
-
-                <p>In 2007, I moved to Vancouver, Canada, initially to study English. That journey led me to explore biochemistry at UBC, and later, a deep passion for the culinary arts. I completed Professional Cook Levels 1–3 and earned my Red Seal Certification in 2021.</p>
-
-                <p>Now, I'm channeling my diverse background into software development — building projects that combine creativity, logic, and a lifelong love of learning.</p>
-            </div>
+        <p class="text-slate-400 leading-[1.85] mb-9 reveal d3 text-[.95rem]">
+          I bring the discipline of a professional kitchen &mdash;
+          <em class="text-slate-200 not-italic font-medium">mise en place</em>, clean execution,
+          zero tolerance for sloppiness &mdash; to every project I build.
+          Currently based in <span class="text-white font-semibold">Vancouver, BC</span>.
+        </p>
+        <div class="flex flex-wrap gap-2 reveal d4">
+          <span class="tag">Computer Science</span>
+          <span class="tag">Red Seal Chef</span>
+          <span class="tag">Vancouver, BC</span>
+          <span class="tag">Web Development</span>
+          <span class="tag">Mobile Dev</span>
+          <span class="tag">Bilingual (ES/EN)</span>
         </div>
+      </div>
     </div>
+  </div>
 </section>
 
-<!-- SKILLS SECTION -->
-<section id="skills" class="py-5">
-    <div class="container">
-        <h2 class="text-center mb-4">Skills</h2>
 
-        <div class="row text-center">
-            <div class="col-md-4 mb-4">
-                <h4>Web Development</h4>
-                <p>HTML, CSS, JavaScript, Node.js, Express, EJS</p>
-            </div>
+<!-- ══════════════════════════════════
+     JOURNEY / TIMELINE
+══════════════════════════════════ -->
+<section id="journey" class="relative py-32">
+  <div class="divider absolute top-0 inset-x-0"></div>
+  <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] bg-blue-500/[.022] rounded-full blur-3xl pointer-events-none"></div>
 
-            <div class="col-md-4 mb-4">
-                <h4>Software & Tools</h4>
-                <p>Git, GitHub, VS Code, MongoDB, Bootstrap</p>
-            </div>
+  <div class="max-w-3xl mx-auto px-5 sm:px-8">
+    <div class="text-center mb-16">
+      <div class="section-label mb-4 reveal">My Journey</div>
+      <h2 class="font-display font-black text-[clamp(2rem,5vw,3.2rem)] text-white leading-tight reveal d1">
+        An Unconventional Path
+      </h2>
+      <p class="text-slate-500 mt-4 max-w-md mx-auto reveal d2 text-sm leading-relaxed">
+        From a computer lab in Mexico to a professional kitchen in Vancouver &mdash;
+        every chapter shaped the developer I'm becoming.
+      </p>
+    </div>
 
-            <div class="col-md-4 mb-4">
-                <h4>Culinary Expertise</h4>
-                <p>Red Seal Certified Chef, menu development, kitchen leadership</p>
+    <div class="shimmer-line mb-12 reveal d2"></div>
+
+    <div class="tl-wrap space-y-6">
+
+      <div class="tl-item reveal d1 pb-6">
+        <div class="tl-dot"></div>
+        <div class="glass-card glow-wrap rounded-2xl p-6 sm:p-8">
+          <div class="flex flex-wrap items-start justify-between gap-3 mb-4">
+            <div>
+              <span class="tag mb-2 inline-block">2002 &ndash; 2006</span>
+              <h3 class="font-display font-bold text-xl text-white mt-1.5">Computer Science Degree</h3>
+              <p class="text-slate-500 text-xs mt-1 tracking-wide">Mexico &middot; Inform&aacute;tica Administrativa</p>
             </div>
+            <div class="w-12 h-12 rounded-xl bg-blue-500/10 border border-blue-500/14 flex items-center justify-center flex-shrink-0 exp-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            </div>
+          </div>
+          <p class="text-slate-400 text-sm leading-relaxed">
+            First program written at age 12. By 15, completed a full Computer Systems Technician
+            course. Earned a CS degree in 2006 focused on Information Systems and
+            worked in the IT department of the Mexican government from 2003&ndash;2006.
+          </p>
         </div>
-    </div>
-</section>
+      </div>
 
-<!-- PROJECTS SECTION -->
-<section id="projects" class="py-5 bg-light">
-    <div class="container">
-        <h2 class="text-center mb-5">Projects</h2>
-
-        <div class="row g-4">
-
-            <!-- Note Taking App -->
-            <div class="col-md-4">
-                <a href="https://github.com/lezamafortuna-boop/Midterm-project" target="_blank" style="text-decoration: none; color: inherit;">
-                    <div class="card shadow-sm h-100">
-                        <img src="./Images/webdesign.jpg" class="card-img-top" alt="Note Taking App">
-                        <div class="card-body">
-                            <h5 class="card-title">Note Taking App</h5>
-                            <p class="card-text">
-                                A full CRUD note‑taking application built with Node.js, Express, and EJS. 
-                                Features user‑friendly UI, persistent storage, and clean routing.
-                            </p>
-                        </div>
-                    </div>
-                </a>
+      <div class="tl-item reveal d2 pb-6">
+        <div class="tl-dot"></div>
+        <div class="glass-card glow-wrap rounded-2xl p-6 sm:p-8">
+          <div class="flex flex-wrap items-start justify-between gap-3 mb-4">
+            <div>
+              <span class="tag mb-2 inline-block">2007 &ndash; 2017</span>
+              <h3 class="font-display font-bold text-xl text-white mt-1.5">Vancouver &amp; UBC</h3>
+              <p class="text-slate-500 text-xs mt-1 tracking-wide">Vancouver, BC &middot; University of British Columbia</p>
             </div>
-
-            <!-- Memory Game -->
-            <div class="col-md-4">
-                <a href="https://lezamafortuna-boop.github.io/Games/" target="_blank" style="text-decoration: none; color: inherit;">
-                    <div class="card shadow-sm h-100">
-                        <img src="./Images/memorygame.jpeg" class="card-img-top" alt="Memory Game">
-                        <div class="card-body">
-                            <h5 class="card-title">Memory Game</h5>
-                            <p class="card-text">
-                                A JavaScript‑powered memory matching game featuring multiple modes, 
-                                responsive UI, and polished animations. Built with clean, modular code.
-                            </p>
-                        </div>
-                    </div>
-                </a>
+            <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/14 flex items-center justify-center flex-shrink-0 exp-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="1.8"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
             </div>
-
-            <!-- Mobile UI Prototype -->
-            <div class="col-md-4">
-                <div class="card shadow-sm h-100">
-                    <img src="./Images/Data.jpg" class="card-img-top" alt="Mobile UI Prototype">
-                    <div class="card-body">
-                        <h5 class="card-title">Mobile UI Prototype</h5>
-                        <p class="card-text">
-                            A responsive mobile‑first interface designed using modern UI/UX principles.
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Culinary Tech Concept -->
-            <div class="col-md-4">
-                <div class="card shadow-sm h-100">
-                    <img src="./Images/food.jpg" class="card-img-top" alt="Culinary Tech Concept">
-                    <div class="card-body">
-                        <h5 class="card-title">Culinary Tech Concept</h5>
-                        <p class="card-text">
-                            A conceptual app blending recipe creation with smart kitchen technology.
-                        </p>
-                    </div>
-                </div>
-            </div>
-
+          </div>
+          <p class="text-slate-400 text-sm leading-relaxed">
+            Arrived for a 6-month English program &mdash; and never left. Enrolled at UBC in Biochemistry,
+            discovering a love for scientific thinking and challenging myself in a completely
+            new intellectual domain before pivoting once more.
+          </p>
         </div>
+      </div>
+
+      <div class="tl-item reveal d3 pb-6">
+        <div class="tl-dot"></div>
+        <div class="glass-card glow-wrap rounded-2xl p-6 sm:p-8">
+          <div class="flex flex-wrap items-start justify-between gap-3 mb-4">
+            <div>
+              <span class="tag mb-2 inline-block">2018 &ndash; 2021</span>
+              <h3 class="font-display font-bold text-xl text-white mt-1.5">Red Seal Certification</h3>
+              <p class="text-slate-500 text-xs mt-1 tracking-wide">Vancouver &middot; PICA &amp; Vancouver Community College</p>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/14 flex items-center justify-center flex-shrink-0 exp-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="1.8"><path d="M3 2h1l1 5-2.5 3A19 19 0 0 0 12 20a19 19 0 0 0 9.5-10L19 7l1-5h1"/></svg>
+            </div>
+          </div>
+          <p class="text-slate-400 text-sm leading-relaxed">
+            A bold pivot into professional cooking. Pacific Institute of Culinary Arts &rarr;
+            VCC apprenticeship &rarr; Professional Cook Levels 1, 2 &amp; 3.
+            Earned the <strong class="highlight-strong font-semibold">Interprovincial Red Seal Certification</strong> in
+            February 2021 &mdash; a nationally recognized credential validating culinary mastery.
+          </p>
+        </div>
+      </div>
+
+      <div class="tl-item reveal d4">
+        <div class="tl-dot" style="background:#3b82f6;border-color:#60a5fa"></div>
+        <div class="rounded-2xl p-6 sm:p-8 relative overflow-hidden"
+             style="background:linear-gradient(135deg,rgba(59,130,246,.08),rgba(16,185,129,.04));border:1px solid rgba(59,130,246,.24)">
+          <div class="absolute top-0 right-0 w-52 h-52 bg-blue-500/[.04] rounded-full blur-2xl pointer-events-none"></div>
+          <div class="flex flex-wrap items-start justify-between gap-3 mb-4">
+            <div>
+              <span class="tag mb-2 inline-block">2025</span>
+              <h3 class="font-display font-bold text-xl text-white mt-1.5">Software Developer</h3>
+              <p class="text-slate-500 text-xs mt-1 tracking-wide">Vancouver, BC &middot; CircuitStream</p>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-blue-500/14 border border-blue-500/22 flex items-center justify-center flex-shrink-0">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="1.8"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            </div>
+          </div>
+          <p class="text-slate-400 text-sm leading-relaxed">
+            Bringing it all together. A software development student channeling 20+ years of
+            technical background, scientific curiosity, and culinary discipline into building
+            modern web and mobile applications &mdash; one clean commit at a time.
+          </p>
+        </div>
+      </div>
+
+      <div class="tl-item reveal d5">
+        <div class="tl-dot" style="background:#f59e0b;border-color:#fbbf24;box-shadow:0 0 14px rgba(245,158,11,.7),0 0 28px rgba(245,158,11,.22)"></div>
+        <div class="rounded-2xl p-6 sm:p-8 relative overflow-hidden"
+             style="background:linear-gradient(135deg,rgba(245,158,11,.08),rgba(180,83,9,.03),rgba(17,24,39,.82));border:1px solid rgba(245,158,11,.26)">
+          <div class="absolute top-0 right-0 w-52 h-52 bg-amber-500/[.04] rounded-full blur-2xl pointer-events-none"></div>
+          <div class="flex flex-wrap items-start justify-between gap-3 mb-4">
+            <div>
+              <span class="tag tag-amber mb-2 inline-flex items-center gap-1.5">
+                <span class="dot-live dot-amber"></span> Now &middot; 2026
+              </span>
+              <h3 class="font-display font-bold text-xl text-white mt-1.5">Founded Lezama Kitchen Labs Inc.</h3>
+              <p class="text-slate-500 text-xs mt-1 tracking-wide">Vancouver, BC &middot; Incorporation in Progress</p>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-amber-500/12 border border-amber-500/22 flex items-center justify-center flex-shrink-0">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="1.8">
+                <path d="M18 8h1a4 4 0 0 1 0 8h-1"/>
+                <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/>
+                <line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/>
+              </svg>
+            </div>
+          </div>
+          <p class="text-slate-400 text-sm leading-relaxed">
+            Two decades of professional kitchen experience, a CS degree, and a return to software
+            converge into a single company: Lezama Kitchen Labs Inc. Building AI-powered tools
+            for kitchens that the industry has always needed &mdash; from the inside out.
+          </p>
+        </div>
+      </div>
+
     </div>
+  </div>
 </section>
 
-<!-- CONTACT SECTION -->
-<section id="contact" class="py-5 text-center">
-    <div class="container">
-        <h2 class="mb-4">Contact</h2>
-        <p class="lead">Let’s connect and build something meaningful.</p>
 
-        <p><strong>Location:</strong> Vancouver, BC</p>
-        <p><strong>Phone:</strong> +1 778-231-6624</p>
-        <p><strong>Email:</strong> lezamafortuna@gmail.com</p>
+<!-- ══════════════════════════════════
+     FOUNDER STORY
+══════════════════════════════════ -->
+<section id="founder" class="relative py-32">
+  <div class="divider absolute top-0 inset-x-0"></div>
+  <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-amber-500/[.018] rounded-full blur-3xl pointer-events-none"></div>
+
+  <div class="max-w-4xl mx-auto px-5 sm:px-8">
+
+    <div class="text-center mb-14">
+      <div class="mb-4 reveal" style="font-size:.68rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#f59e0b;display:inline-flex;align-items:center;gap:.5rem">
+        <span style="display:inline-block;width:18px;height:1px;background:#f59e0b;flex-shrink:0"></span>
+        Origin Story
+      </div>
+      <h2 class="font-display font-black text-[clamp(2rem,5vw,3.2rem)] text-white leading-tight reveal d1">
+        Why I Built This
+      </h2>
     </div>
+
+    <!-- Pull quote -->
+    <div class="reveal d2 mb-14 text-center px-4 sm:px-12">
+      <div class="relative py-6">
+        <div class="absolute -top-4 left-0 text-amber-500/14 font-display font-black select-none" style="font-size:6rem;line-height:1">&ldquo;</div>
+        <p class="relative z-10 text-xl sm:text-2xl font-display font-bold text-white leading-snug">
+          After nearly 20 years on the line, I knew exactly what software<br class="hidden sm:block">
+          professional kitchens needed. No one was building it.&nbsp;&nbsp;So I did.
+        </p>
+        <div class="absolute -bottom-8 right-0 text-amber-500/14 font-display font-black select-none" style="font-size:6rem;line-height:1">&rdquo;</div>
+      </div>
+    </div>
+
+    <div class="mb-12 reveal d3" style="height:1px;background:linear-gradient(90deg,transparent,rgba(245,158,11,.5),rgba(180,83,9,.3),transparent)"></div>
+
+    <!-- Narrative cards -->
+    <div class="grid md:grid-cols-2 gap-6 mb-10">
+
+      <div class="glass-card glow-wrap rounded-2xl p-7 reveal d3">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-1 h-8 rounded-full flex-shrink-0" style="background:#f59e0b"></div>
+          <h3 class="font-display font-bold text-base text-white">The Kitchen Years</h3>
+        </div>
+        <p class="text-slate-400 leading-[1.85] text-[.92rem]">
+          Nearly two decades on the line &mdash; line cook, sous chef, kitchen manager &mdash;
+          taught me something no CS textbook could: the brutal operational reality
+          of a professional kitchen. Inventory chaos. Prep schedules on whiteboards.
+          Recipe costing done in spreadsheets at midnight. The inefficiencies were
+          everywhere, and they were expensive.
+        </p>
+      </div>
+
+      <div class="glass-card glow-wrap rounded-2xl p-7 reveal d4">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-1 h-8 rounded-full flex-shrink-0" style="background:#f59e0b"></div>
+          <h3 class="font-display font-bold text-base text-white">The Gap Nobody Fixed</h3>
+        </div>
+        <p class="text-slate-400 leading-[1.85] text-[.92rem]">
+          Technology transformed almost every other industry &mdash; but the professional
+          kitchen was still running on paper tickets and tribal knowledge. The tools
+          that existed were overpriced enterprise software built by people who'd never
+          held a knife, or consumer apps too shallow for the complexity of a real service.
+          I saw this gap from the inside.
+        </p>
+      </div>
+
+    </div>
+
+    <!-- The decision -->
+    <div class="text-center max-w-2xl mx-auto mb-12 reveal d5">
+      <p class="text-slate-400 leading-[1.85] text-[.95rem]">
+        In 2025, I made a choice: return to my roots in software development
+        and build what the industry actually needed. Not a side project.
+        Not a hobby. A <span class="text-white font-semibold">real company</span>,
+        built from two decades of culinary craft, a CS degree, and a return
+        to the work I was always meant to do.
+      </p>
+    </div>
+
+    <!-- Founding card -->
+    <div class="reveal d5">
+      <div class="rounded-2xl p-8 sm:p-10 relative overflow-hidden"
+           style="background:linear-gradient(135deg,rgba(245,158,11,.07),rgba(180,83,9,.03),rgba(17,24,39,.88));border:1px solid rgba(245,158,11,.24)">
+        <div class="absolute -top-16 -right-16 w-72 h-72 bg-amber-500/[.04] rounded-full blur-2xl pointer-events-none"></div>
+
+        <div class="flex flex-col sm:flex-row sm:items-start gap-6 relative z-10">
+
+          <!-- Logo placeholder -->
+          <div class="flex-shrink-0 text-center">
+            <div class="w-20 h-20 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mx-auto">
+              <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="1.6">
+                <path d="M18 8h1a4 4 0 0 1 0 8h-1"/>
+                <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/>
+                <line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/>
+              </svg>
+            </div>
+            <p class="text-amber-500/35 text-[.53rem] font-semibold mt-2 tracking-widest uppercase leading-tight">Logo<br>Pending</p>
+          </div>
+
+          <!-- Company info -->
+          <div class="flex-1">
+            <p class="text-amber-400/60 text-[.6rem] font-bold tracking-[.18em] uppercase mb-1.5">
+              Founded 2026 &middot; Vancouver, BC &middot; Incorporation in Progress
+            </p>
+            <h3 class="font-display font-black text-2xl sm:text-3xl text-white mb-2 leading-tight">
+              Lezama Kitchen Labs Inc.
+            </h3>
+            <p class="text-amber-400/65 text-sm font-semibold italic mb-4">&ldquo;Engineering Smarter Kitchens.&rdquo;</p>
+            <p class="text-slate-400 text-sm leading-relaxed mb-6">
+              A British Columbia&ndash;based software company operating at the intersection
+              of artificial intelligence, mobile technology, and the food service industry.
+              Two product lines &mdash; consumer and professional &mdash; built on a unified
+              technology foundation. From household kitchens to commercial operations at scale.
+            </p>
+            <div class="flex flex-wrap gap-2">
+              <span class="tag tag-amber">KitchenTech</span>
+              <span class="tag tag-green">AI-Powered</span>
+              <span class="tag">React Native</span>
+              <span class="tag">SaaS</span>
+              <span class="tag tag-amber">BC Incorporated</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </section>
 
-<!-- FOOTER -->
-<footer class="bg-dark text-light text-center py-3">
-    <p>&copy; 2025 Luis Alberto Lezama Fortuna | All rights reserved</p>
+
+<!-- ══════════════════════════════════
+     EXPERTISE
+══════════════════════════════════ -->
+<section id="expertise" class="relative py-32">
+  <div class="divider absolute top-0 inset-x-0"></div>
+
+  <div class="max-w-6xl mx-auto px-5 sm:px-8">
+    <div class="text-center mb-14">
+      <div class="section-label mb-4 reveal">What I Do</div>
+      <h2 class="font-display font-black text-[clamp(2rem,5vw,3.2rem)] text-white leading-tight reveal d1">
+        Expertise &amp; Craft
+      </h2>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+      <!-- Web &mdash; wide -->
+      <div class="glass-card glow-wrap rounded-2xl p-8 md:col-span-2 reveal group">
+        <div class="flex items-start justify-between mb-6">
+          <div class="w-14 h-14 rounded-xl bg-blue-500/10 border border-blue-500/14 flex items-center justify-center exp-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          </div>
+          <span class="tag">Primary Focus</span>
+        </div>
+        <h3 class="font-display font-bold text-2xl text-white mb-3">Web Design &amp; Development</h3>
+        <p class="text-slate-400 leading-[1.8] mb-6 text-[.92rem]">
+          Building clean, modern interfaces with a focus on user experience.
+          From responsive layouts to interactive components &mdash; I craft digital
+          experiences that balance aesthetics with performance.
+        </p>
+        <div class="space-y-3 mb-6">
+          <div>
+            <div class="flex justify-between text-xs text-slate-500 mb-1.5"><span>HTML / CSS</span><span>90%</span></div>
+            <div class="skill-track"><div class="skill-fill" data-w="90"></div></div>
+          </div>
+          <div>
+            <div class="flex justify-between text-xs text-slate-500 mb-1.5"><span>JavaScript / React</span><span>80%</span></div>
+            <div class="skill-track"><div class="skill-fill" data-w="80"></div></div>
+          </div>
+          <div>
+            <div class="flex justify-between text-xs text-slate-500 mb-1.5"><span>Tailwind CSS</span><span>85%</span></div>
+            <div class="skill-track"><div class="skill-fill" data-w="85"></div></div>
+          </div>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <span class="tag">HTML / CSS</span>
+          <span class="tag">JavaScript</span>
+          <span class="tag">React</span>
+          <span class="tag">Tailwind CSS</span>
+        </div>
+      </div>
+
+      <!-- Mobile -->
+      <div class="glass-card glow-wrap rounded-2xl p-8 reveal d1 group flex flex-col">
+        <div class="w-14 h-14 rounded-xl bg-emerald-500/10 border border-emerald-500/14 flex items-center justify-center mb-6 exp-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="1.8"><rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="18" r=".5" fill="#34d399" stroke="#34d399"/></svg>
+        </div>
+        <h3 class="font-display font-bold text-xl text-white mb-3">Mobile Development</h3>
+        <p class="text-slate-400 text-[.88rem] leading-[1.8] mb-6 flex-1">
+          Mobile-first applications that feel native and intuitive.
+          Responsive by default, smooth in every interaction.
+        </p>
+        <div class="flex flex-wrap gap-2">
+          <span class="tag tag-green">React Native</span>
+          <span class="tag tag-green">iOS / Android</span>
+          <span class="tag tag-green">Mobile UI</span>
+        </div>
+      </div>
+
+      <!-- Photo card -->
+      <div class="glass-card rounded-2xl overflow-hidden relative group reveal d2 min-h-[220px]">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/18 to-transparent z-10"></div>
+        <img src="./Images/food.jpg" alt="Culinary work"
+             class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+             onerror="this.style.display='none'">
+        <div class="absolute inset-0 bg-gradient-to-br from-amber-900/20 to-orange-900/12"></div>
+        <div class="absolute bottom-0 left-0 right-0 p-6 z-20">
+          <div class="tag tag-amber mb-2 inline-block">Certified 2021</div>
+          <h3 class="font-display font-bold text-lg text-white">Red Seal Chef</h3>
+          <p class="text-slate-400 text-xs mt-0.5">Interprovincial Certified</p>
+        </div>
+      </div>
+
+      <!-- Lezama Kitchen Labs &mdash; wide -->
+      <div class="glass-card glow-wrap rounded-2xl p-8 md:col-span-2 reveal d3 group"
+           style="background:linear-gradient(135deg,rgba(245,158,11,.06),rgba(17,24,39,.72));border-color:rgba(245,158,11,.18);">
+        <div class="flex items-start justify-between mb-5">
+          <div class="w-14 h-14 rounded-xl bg-amber-500/12 border border-amber-500/22 flex items-center justify-center exp-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="1.8"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+          </div>
+          <span class="tag tag-amber flex items-center gap-1.5">
+            <span class="dot-live dot-amber"></span>
+            Founder &amp; Builder
+          </span>
+        </div>
+        <p class="text-amber-400/70 text-[.62rem] font-bold tracking-[.18em] uppercase mb-1">Lezama Kitchen Labs Inc.</p>
+        <h3 class="font-display font-black text-2xl text-white mb-1">&ldquo;Engineering Smarter Kitchens.&rdquo;</h3>
+        <p class="text-slate-400 leading-[1.8] mb-7 text-[.92rem] mt-4">
+          Building software purpose-built for professional kitchens. From iOS kitchen management apps
+          to full-scale operations platforms &mdash; Lezama Kitchen Labs sits at the exact intersection
+          of 20+ years of culinary expertise and modern software development.
+          Legitimate. Scalable. Built from the inside out.
+        </p>
+        <div class="flex flex-wrap gap-2">
+          <span class="tag tag-amber">Kitchen Software</span>
+          <span class="tag tag-amber">iOS / Mobile</span>
+          <span class="tag tag-amber">SaaS</span>
+          <span class="tag tag-amber">Food Tech</span>
+          <span class="tag tag-amber">Operations</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════
+     PROJECTS
+══════════════════════════════════ -->
+<section id="projects" class="relative py-32">
+  <div class="divider absolute top-0 inset-x-0"></div>
+  <div class="absolute top-1/3 right-0 w-[480px] h-[480px] bg-emerald-500/[.022] rounded-full blur-3xl pointer-events-none"></div>
+  <div class="absolute bottom-1/3 left-0 w-[380px] h-[380px] bg-blue-500/[.022] rounded-full blur-3xl pointer-events-none"></div>
+
+  <div class="max-w-6xl mx-auto px-5 sm:px-8">
+    <div class="text-center mb-16">
+      <div class="section-label mb-4 reveal">Portfolio</div>
+      <h2 class="font-display font-black text-[clamp(2rem,5vw,3.2rem)] text-white leading-tight reveal d1">
+        Projects &amp; Work
+      </h2>
+      <p class="text-slate-500 mt-4 max-w-lg mx-auto reveal d2 text-sm leading-relaxed">
+        AI-powered mobile apps, kitchen SaaS platforms, and web projects &mdash; organized by discipline.
+      </p>
+    </div>
+
+    <!-- 1. MOBILE DEVELOPMENT -->
+    <div class="mb-16 reveal">
+      <div class="flex items-center gap-3 mb-7">
+        <div class="w-9 h-9 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center flex-shrink-0">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="1.8"><rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="18" r=".5" fill="#fbbf24" stroke="#fbbf24"/></svg>
+        </div>
+        <h3 class="font-display font-bold text-white text-[.95rem] tracking-tight">Mobile Development</h3>
+        <div class="flex-1 h-px bg-gradient-to-r from-amber-500/25 to-transparent"></div>
+        <span class="tag tag-amber text-[.6rem]">iOS</span>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+        <!-- The Sharp Home -->
+        <div class="project-card rounded-2xl overflow-hidden group">
+          <div class="proj-img h-60 relative">
+            <img src="./Images/sharp-home-screen.png" alt="The Sharp Home app"
+                 class="w-full h-full object-cover object-top"
+                 onerror="this.style.background='linear-gradient(135deg,rgba(16,185,129,.1),rgba(8,11,20,.9))'">
+            <div class="proj-overlay"></div>
+            <div class="absolute top-4 left-4 flex items-center gap-2 glass px-3 py-1.5 rounded-full text-xs font-semibold text-amber-300 border border-amber-500/20">
+              <span class="dot-live dot-amber"></span>
+              Pending App Store Review
+            </div>
+            <div class="absolute bottom-4 right-4 w-14 h-14 rounded-2xl overflow-hidden shadow-xl shadow-black/40 border border-white/10">
+              <img src="./Images/sharp-home-icon.png" alt="The Sharp Home icon" class="w-full h-full object-cover">
+            </div>
+          </div>
+          <div class="p-6">
+            <p class="text-amber-400/60 text-[.6rem] font-bold tracking-[.16em] uppercase mb-1">Lezama Kitchen Labs Inc.</p>
+            <h3 class="font-display font-bold text-lg text-white mb-2">The Sharp Home</h3>
+            <p class="text-slate-400 text-sm leading-relaxed mb-5">
+              AI-powered kitchen management for home cooks. Smart pantry tracking, weekly meal planning,
+              and a personal recipe vault &mdash; with an AI chef powered by
+              <span class="text-emerald-400 font-medium">Claude (Anthropic)</span> that turns
+              what's in your fridge into tonight's dinner. Freemium subscription via RevenueCat.
+            </p>
+            <div class="flex flex-wrap gap-1.5 mb-5">
+              <span class="tag tag-green">Claude AI</span>
+              <span class="tag">React Native</span>
+              <span class="tag">Expo</span>
+              <span class="tag tag-amber">iOS</span>
+              <span class="tag tag-amber">RevenueCat</span>
+            </div>
+            <div class="flex items-center justify-between pt-1 border-t border-white/[.05]">
+              <div class="text-xs text-slate-500 flex items-center gap-1.5">
+                <span class="dot-live dot-amber"></span>
+                TestFlight &middot; Ready to deploy
+              </div>
+              <div class="flex items-center gap-1 text-slate-500">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="#94a3b8" opacity=".6"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+                <span class="text-xs">App Store soon</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- More mobile apps placeholder -->
+        <div class="rounded-2xl border border-dashed border-white/10 flex flex-col items-center justify-center gap-4 p-8 min-h-[340px]"
+             style="background:rgba(17,24,39,.35)">
+          <div class="w-14 h-14 rounded-2xl bg-amber-500/8 border border-amber-500/15 flex items-center justify-center">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="1.5" opacity=".65"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="13" x2="13" y2="13"/></svg>
+          </div>
+          <div class="text-center">
+            <p class="text-slate-400 font-semibold text-sm mb-1">More apps in development</p>
+            <p class="text-slate-600 text-xs leading-relaxed max-w-[190px]">
+              Additional iOS apps from Lezama Kitchen Labs are currently in the pipeline.
+            </p>
+          </div>
+          <span class="tag tag-amber text-[.6rem]">Coming soon</span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 2. WEB APPLICATIONS -->
+    <div class="mb-16 reveal d1">
+      <div class="flex items-center gap-3 mb-7">
+        <div class="w-9 h-9 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center flex-shrink-0">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+        </div>
+        <h3 class="font-display font-bold text-white text-[.95rem] tracking-tight">Web Applications</h3>
+        <div class="flex-1 h-px bg-gradient-to-r from-blue-500/25 to-transparent"></div>
+        <span class="tag text-[.6rem]">SaaS</span>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+        <!-- Sharp Kitchen (Professional) -->
+        <div class="project-card rounded-2xl overflow-hidden group">
+          <div class="proj-img h-52 relative">
+            <img src="./Images/FoodTech.png" alt="Sharp Kitchen"
+                 class="w-full h-full object-cover"
+                 onerror="this.style.background='linear-gradient(135deg,rgba(59,130,246,.08),rgba(8,11,20,.95))'">
+            <div class="proj-overlay"></div>
+            <div class="absolute top-4 left-4 flex items-center gap-2 glass px-3 py-1.5 rounded-full text-xs font-semibold text-blue-300 border border-blue-500/20">
+              <span class="dot-live"></span>
+              In Development
+            </div>
+            <div class="absolute top-4 right-4 glass p-2 rounded-lg border border-white/10">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#e2e8f0" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            </div>
+          </div>
+          <div class="p-6">
+            <p class="text-blue-400/60 text-[.6rem] font-bold tracking-[.16em] uppercase mb-1">Lezama Kitchen Labs Inc.</p>
+            <h3 class="font-display font-bold text-lg text-white mb-2">Sharp Kitchen</h3>
+            <p class="text-slate-400 text-sm leading-relaxed mb-5">
+              Professional kitchen management platform for the restaurant and foodservice industry.
+              The enterprise counterpart to The Sharp Home &mdash; built for the speed, complexity,
+              and operational demands of commercial kitchens at scale.
+            </p>
+            <div class="flex flex-wrap gap-1.5 mb-5">
+              <span class="tag">Web App</span>
+              <span class="tag">Restaurant</span>
+              <span class="tag tag-green">Claude AI</span>
+              <span class="tag">Kitchen Ops</span>
+              <span class="tag">Enterprise</span>
+            </div>
+            <div class="flex items-center justify-between pt-1 border-t border-white/[.05]">
+              <div class="text-xs text-slate-500 flex items-center gap-1.5">
+                <span class="dot-live"></span>
+                Active development
+              </div>
+              <span class="text-xs text-slate-600">Coming soon</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Web App placeholder -->
+        <div class="rounded-2xl border border-dashed border-white/10 flex flex-col items-center justify-center gap-4 p-8 min-h-[280px]"
+             style="background:rgba(17,24,39,.35)">
+          <div class="w-14 h-14 rounded-2xl bg-blue-500/8 border border-blue-500/15 flex items-center justify-center">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="1.5" opacity=".65"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+          </div>
+          <div class="text-center">
+            <p class="text-slate-400 font-semibold text-sm mb-1">More web apps coming</p>
+            <p class="text-slate-600 text-xs leading-relaxed max-w-[190px]">
+              Additional SaaS products from the Lezama Kitchen Labs pipeline.
+            </p>
+          </div>
+          <span class="tag text-[.6rem]">Coming soon</span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 3. WEB DEVELOPMENT -->
+    <div class="reveal d2">
+      <div class="flex items-center gap-3 mb-7">
+        <div class="w-9 h-9 rounded-xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center flex-shrink-0">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="1.8"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        </div>
+        <h3 class="font-display font-bold text-white text-[.95rem] tracking-tight">Web Development</h3>
+        <div class="flex-1 h-px bg-gradient-to-r from-violet-500/25 to-transparent"></div>
+        <span class="tag tag-purple text-[.6rem]">3 In Progress</span>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+
+        <!-- Website 1 -->
+        <div class="project-card rounded-2xl overflow-hidden group">
+          <div class="proj-img h-44 relative">
+            <img src="./Images/webdesign.jpg" alt="Web Project 1"
+                 class="w-full h-full object-cover"
+                 onerror="this.style.background='linear-gradient(135deg,rgba(139,92,246,.08),rgba(8,11,20,.9))'">
+            <div class="proj-overlay"></div>
+            <div class="absolute top-3 left-3 flex items-center gap-1.5 glass px-2.5 py-1 rounded-full text-[.67rem] font-semibold text-violet-300 border border-violet-500/20">
+              <span class="dot-live" style="background:#a78bfa;box-shadow:0 0 8px rgba(167,139,250,.8)"></span>
+              In Progress
+            </div>
+          </div>
+          <div class="p-5">
+            <h3 class="font-display font-bold text-base text-white mb-1.5">Website Project 1</h3>
+            <p class="text-slate-500 text-xs leading-relaxed mb-4">Modern web project in active development. Details coming soon.</p>
+            <div class="flex flex-wrap gap-1.5 mb-4">
+              <span class="tag tag-purple">React</span>
+              <span class="tag tag-purple">Tailwind</span>
+            </div>
+            <div class="pt-1 border-t border-white/[.05]">
+              <span class="text-xs text-slate-600">Coming soon</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Website 2 -->
+        <div class="project-card rounded-2xl overflow-hidden group">
+          <div class="proj-img h-44 relative">
+            <img src="./Images/a modern workspace w.png" alt="Web Project 2"
+                 class="w-full h-full object-cover"
+                 onerror="this.style.background='linear-gradient(135deg,rgba(139,92,246,.08),rgba(8,11,20,.9))'">
+            <div class="proj-overlay"></div>
+            <div class="absolute top-3 left-3 flex items-center gap-1.5 glass px-2.5 py-1 rounded-full text-[.67rem] font-semibold text-violet-300 border border-violet-500/20">
+              <span class="dot-live" style="background:#a78bfa;box-shadow:0 0 8px rgba(167,139,250,.8)"></span>
+              In Progress
+            </div>
+          </div>
+          <div class="p-5">
+            <h3 class="font-display font-bold text-base text-white mb-1.5">Website Project 2</h3>
+            <p class="text-slate-500 text-xs leading-relaxed mb-4">Modern web project in active development. Details coming soon.</p>
+            <div class="flex flex-wrap gap-1.5 mb-4">
+              <span class="tag tag-purple">Next.js</span>
+              <span class="tag tag-purple">TypeScript</span>
+            </div>
+            <div class="pt-1 border-t border-white/[.05]">
+              <span class="text-xs text-slate-600">Coming soon</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Website 3 -->
+        <div class="project-card rounded-2xl overflow-hidden group">
+          <div class="proj-img h-44 relative">
+            <img src="./Images/Data.jpg" alt="Web Project 3"
+                 class="w-full h-full object-cover"
+                 onerror="this.style.background='linear-gradient(135deg,rgba(139,92,246,.08),rgba(8,11,20,.9))'">
+            <div class="proj-overlay"></div>
+            <div class="absolute top-3 left-3 flex items-center gap-1.5 glass px-2.5 py-1 rounded-full text-[.67rem] font-semibold text-violet-300 border border-violet-500/20">
+              <span class="dot-live" style="background:#a78bfa;box-shadow:0 0 8px rgba(167,139,250,.8)"></span>
+              In Progress
+            </div>
+          </div>
+          <div class="p-5">
+            <h3 class="font-display font-bold text-base text-white mb-1.5">Website Project 3</h3>
+            <p class="text-slate-500 text-xs leading-relaxed mb-4">Modern web project in active development. Details coming soon.</p>
+            <div class="flex flex-wrap gap-1.5 mb-4">
+              <span class="tag tag-purple">JavaScript</span>
+              <span class="tag tag-purple">CSS</span>
+            </div>
+            <div class="pt-1 border-t border-white/[.05]">
+              <span class="text-xs text-slate-600">Coming soon</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════
+     CONTACT
+══════════════════════════════════ -->
+<section id="contact" class="relative py-32">
+  <div class="divider absolute top-0 inset-x-0"></div>
+
+  <div class="max-w-4xl mx-auto px-5 sm:px-8">
+    <div class="text-center mb-14">
+      <div class="section-label mb-4 reveal">Get In Touch</div>
+      <h2 class="font-display font-black text-[clamp(2rem,5vw,3.2rem)] text-white leading-tight reveal d1">
+        Let's Build Something
+      </h2>
+      <p class="text-slate-500 mt-4 max-w-sm mx-auto reveal d2 text-sm leading-relaxed">
+        A project, an opportunity, or just a chat about code and food &mdash; I'd love to hear from you.
+      </p>
+    </div>
+
+    <div class="grid md:grid-cols-5 gap-6">
+
+      <!-- Info cards -->
+      <div class="md:col-span-2 space-y-3 reveal">
+        <div class="glass-card rounded-xl p-4 flex items-center gap-4">
+          <div class="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <div>
+            <div class="text-[.6rem] text-slate-600 uppercase tracking-widest font-semibold mb-0.5">Location</div>
+            <div class="text-white text-sm font-medium">Vancouver, BC</div>
+          </div>
+        </div>
+
+        <div class="glass-card rounded-xl p-4 flex items-center gap-4">
+          <div class="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <div>
+            <div class="text-[.6rem] text-slate-600 uppercase tracking-widest font-semibold mb-0.5">Email</div>
+            <a href="mailto:lezamafortuna@gmail.com" class="text-blue-400 text-sm font-medium hover:text-blue-300 transition-colors break-all">lezamafortuna@gmail.com</a>
+          </div>
+        </div>
+
+        <div class="glass-card rounded-xl p-4 flex items-center gap-4">
+          <div class="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.59 3.43 2 2 0 0 1 3.55 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.76a16 16 0 0 0 5.33 5.33l1.82-1.82a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          </div>
+          <div>
+            <div class="text-[.6rem] text-slate-600 uppercase tracking-widest font-semibold mb-0.5">Phone</div>
+            <a href="tel:+17782316624" class="text-white text-sm font-medium hover:text-blue-300 transition-colors">+1 778-231-6624</a>
+          </div>
+        </div>
+
+        <div class="flex gap-3 pt-1">
+          <a href="https://www.linkedin.com/in/luis-lezama-37435b385" target="_blank" rel="noopener"
+             class="flex-1 glass-card rounded-xl p-3.5 flex items-center justify-center gap-2 text-slate-400 hover:text-white transition-colors text-sm font-medium">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+            LinkedIn
+          </a>
+          <a href="https://github.com/lezamafortuna-boop" target="_blank" rel="noopener"
+             class="flex-1 glass-card rounded-xl p-3.5 flex items-center justify-center gap-2 text-slate-400 hover:text-white transition-colors text-sm font-medium">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+            GitHub
+          </a>
+        </div>
+      </div>
+
+      <!-- Form -->
+      <div class="md:col-span-3 glass-card rounded-2xl p-7 reveal d1">
+        <form id="contactForm" onsubmit="handleFormSubmit(event)" novalidate>
+          <div class="space-y-4">
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div>
+                <label class="text-[.6rem] text-slate-500 uppercase tracking-widest font-semibold block mb-2">Name <span class="text-blue-500">*</span></label>
+                <input type="text" name="name" placeholder="Your name" class="form-field" required autocomplete="name">
+              </div>
+              <div>
+                <label class="text-[.6rem] text-slate-500 uppercase tracking-widest font-semibold block mb-2">Email <span class="text-blue-500">*</span></label>
+                <input type="email" name="email" placeholder="your@email.com" class="form-field" required autocomplete="email">
+              </div>
+            </div>
+            <div>
+              <label class="text-[.6rem] text-slate-500 uppercase tracking-widest font-semibold block mb-2">Subject</label>
+              <input type="text" name="subject" placeholder="What's this about?" class="form-field">
+            </div>
+            <div>
+              <label class="text-[.6rem] text-slate-500 uppercase tracking-widest font-semibold block mb-2">Message <span class="text-blue-500">*</span></label>
+              <textarea name="message" placeholder="Tell me about your project or opportunity..." rows="5" class="form-field" style="resize:none" required></textarea>
+            </div>
+            <button type="submit" class="btn-primary w-full py-3.5 rounded-xl text-white font-semibold text-[.95rem]">
+              Send Message
+            </button>
+          </div>
+        </form>
+        <div id="formSuccess" style="display:none" class="text-center py-12">
+          <div class="w-16 h-16 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto mb-5">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <h4 class="font-display font-bold text-xl text-white mb-2">Message Sent!</h4>
+          <p class="text-slate-400 text-sm">Thanks for reaching out &mdash; I'll get back to you soon.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════
+     FOOTER
+══════════════════════════════════ -->
+<footer class="py-8 border-t border-white/[.04]">
+  <div class="max-w-6xl mx-auto px-5 sm:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center font-display font-black text-[11px] text-white">LL</div>
+      <span class="text-slate-600 text-xs">&copy; 2025 Luis Alberto Lezama Fortuna &middot; All rights reserved</span>
+    </div>
+    <p class="text-slate-700 text-xs">Crafted with care &middot; Vancouver, BC</p>
+  </div>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- ══════════════════════════════════
+     SCRIPTS
+══════════════════════════════════ -->
+<script>
+  /* ─── Custom Cursor ─── */
+  const dot  = document.getElementById('cursor-dot');
+  const ring = document.getElementById('cursor-ring');
+  let mx=0,my=0,rx=0,ry=0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    dot.style.left = mx+'px';
+    dot.style.top  = my+'px';
+  });
+  (function animRing() {
+    rx += (mx-rx)*.1; ry += (my-ry)*.1;
+    ring.style.left = rx+'px'; ring.style.top = ry+'px';
+    requestAnimationFrame(animRing);
+  })();
+
+  document.querySelectorAll('a,button,[role="button"],.glass-card,.project-card').forEach(el => {
+    el.addEventListener('mouseenter',()=>document.body.classList.add('c-hover'));
+    el.addEventListener('mouseleave',()=>document.body.classList.remove('c-hover'));
+  });
+
+  /* ─── Particle Canvas ─── */
+  (function(){
+    const canvas = document.getElementById('particles-canvas');
+    const ctx    = canvas.getContext('2d');
+    let W,H,particles=[],mouse={x:-9999,y:-9999};
+
+    function resize(){ W=canvas.width=canvas.offsetWidth; H=canvas.height=canvas.offsetHeight; }
+    window.addEventListener('resize',resize); resize();
+
+    class Particle {
+      constructor(){ this.reset(); }
+      reset(){
+        this.x =Math.random()*W; this.y=Math.random()*H;
+        this.vx=(Math.random()-.5)*.28; this.vy=(Math.random()-.5)*.28;
+        this.r =Math.random()*1.4+.4;
+        this.alpha=Math.random()*.38+.08;
+        this.color=Math.random()>.55?'#3b82f6':'#10b981';
+      }
+      update(){
+        this.x+=this.vx; this.y+=this.vy;
+        const dx=this.x-mouse.x,dy=this.y-mouse.y,d=Math.sqrt(dx*dx+dy*dy);
+        if(d<90){ this.x+=dx/d*1.1; this.y+=dy/d*1.1; }
+        if(this.x<0||this.x>W) this.vx*=-1;
+        if(this.y<0||this.y>H) this.vy*=-1;
+      }
+      draw(){
+        ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);
+        ctx.fillStyle=this.color;ctx.globalAlpha=this.alpha;ctx.fill();ctx.globalAlpha=1;
+      }
+    }
+
+    const N=Math.min(80,Math.floor(W*H/11000));
+    for(let i=0;i<N;i++) particles.push(new Particle());
+
+    canvas.addEventListener('mousemove',e=>{
+      const r=canvas.getBoundingClientRect();
+      mouse.x=e.clientX-r.left; mouse.y=e.clientY-r.top;
+    });
+    canvas.addEventListener('mouseleave',()=>{mouse.x=-9999;mouse.y=-9999;});
+
+    function drawLines(){
+      for(let i=0;i<particles.length;i++){
+        for(let j=i+1;j<particles.length;j++){
+          const dx=particles[i].x-particles[j].x,dy=particles[i].y-particles[j].y;
+          const d=Math.sqrt(dx*dx+dy*dy);
+          if(d<115){
+            ctx.beginPath();ctx.moveTo(particles[i].x,particles[i].y);
+            ctx.lineTo(particles[j].x,particles[j].y);
+            ctx.strokeStyle=`rgba(59,130,246,${.11*(1-d/115)})`;
+            ctx.lineWidth=.5;ctx.stroke();
+          }
+        }
+      }
+    }
+
+    (function animate(){
+      ctx.clearRect(0,0,W,H);
+      drawLines();
+      particles.forEach(p=>{p.update();p.draw();});
+      requestAnimationFrame(animate);
+    })();
+  })();
+
+  /* ─── Mobile Menu ─── */
+  const menuBtn    = document.getElementById('menuBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  const iconOpen   = document.getElementById('iconOpen');
+  const iconClose  = document.getElementById('iconClose');
+
+  menuBtn.addEventListener('click',()=>{
+    const h=mobileMenu.style.display==='none';
+    mobileMenu.style.display=h?'flex':'none';
+    iconOpen.style.display=h?'none':'inline';
+    iconClose.style.display=h?'inline':'none';
+  });
+  mobileMenu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{
+    mobileMenu.style.display='none';iconOpen.style.display='inline';iconClose.style.display='none';
+  }));
+
+  /* ─── Navbar Scroll ─── */
+  window.addEventListener('scroll',()=>{
+    document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>30);
+  },{passive:true});
+
+  /* ─── Active Nav ─── */
+  const navLinks=document.querySelectorAll('.nav-link');
+  new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting) navLinks.forEach(l=>l.classList.toggle('active',l.getAttribute('href')==='#'+e.target.id));
+    });
+  },{threshold:.4}).observe; // init per-section below
+  document.querySelectorAll('section[id]').forEach(s=>{
+    new IntersectionObserver(entries=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting) navLinks.forEach(l=>l.classList.toggle('active',l.getAttribute('href')==='#'+e.target.id));
+      });
+    },{threshold:.4}).observe(s);
+  });
+
+  /* ─── Scroll Reveal ─── */
+  const revObs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{ if(e.isIntersecting){e.target.classList.add('visible');revObs.unobserve(e.target);} });
+  },{threshold:.07,rootMargin:'0px 0px -36px 0px'});
+  document.querySelectorAll('.reveal,.reveal-left,.reveal-scale').forEach(el=>revObs.observe(el));
+
+  /* ─── Split-Text Hero ─── */
+  (function(){
+    document.querySelectorAll('#hero-title .split-line').forEach((line,li)=>{
+      if(line.classList.contains('gradient-text-anim')){
+        /* gradient line: animate as a block — background-clip:text breaks on child spans */
+        line.style.cssText='opacity:0;transform:translateY(100%)';
+        setTimeout(()=>{
+          line.style.transition='opacity .65s cubic-bezier(.4,0,.2,1) .42s,transform .65s cubic-bezier(.4,0,.2,1) .42s';
+          line.style.opacity='1';
+          line.style.transform='translateY(0)';
+        },200);
+        return;
+      }
+      const txt=line.textContent; line.innerHTML='';
+      txt.split('').forEach((ch,ci)=>{
+        const s=document.createElement('span');
+        s.className='split-char';
+        s.textContent=ch===' '?' ':ch;
+        s.style.transitionDelay=(li*.28+ci*.032)+'s';
+        line.appendChild(s);
+      });
+    });
+    setTimeout(()=>document.querySelectorAll('.split-char').forEach(c=>c.classList.add('visible')),180);
+  })();
+
+  /* ─── Counter Animation ─── */
+  function animCount(el){
+    const target=+el.dataset.count, sfx=el.dataset.suffix||'', dur=1800, start=performance.now();
+    (function step(now){
+      const p=Math.min((now-start)/dur,1), e=1-Math.pow(1-p,3);
+      el.textContent=Math.round(e*target)+sfx;
+      if(p<1) requestAnimationFrame(step);
+    })(start);
+  }
+  new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        e.target.querySelectorAll('[data-count]').forEach(animCount);
+      }
+    });
+  },{threshold:.5}).observe(document.querySelector('#home .grid'));
+
+  /* ─── Skill Bars ─── */
+  new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        e.target.querySelectorAll('.skill-fill').forEach((b,i)=>
+          setTimeout(()=>b.classList.add('go'),i*160));
+      }
+    });
+  },{threshold:.3}).observe(document.querySelector('#expertise'));
+
+  /* ─── 3D Card Tilt ─── */
+  document.querySelectorAll('.project-card').forEach(card=>{
+    card.addEventListener('mousemove',e=>{
+      const r=card.getBoundingClientRect();
+      const x=e.clientX-r.left, y=e.clientY-r.top;
+      const rx=((y-r.height/2)/r.height)*-7;
+      const ry=((x-r.width/2)/r.width)*7;
+      card.style.transform=`perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateZ(6px)`;
+    });
+    card.addEventListener('mouseleave',()=>{
+      card.style.transition='transform .55s cubic-bezier(.4,0,.2,1),border-color .4s,box-shadow .4s';
+      card.style.transform='';
+      setTimeout(()=>card.style.transition='',560);
+    });
+  });
+
+  /* ─── Smooth Scroll ─── */
+  document.querySelectorAll('a[href^="#"]').forEach(a=>{
+    a.addEventListener('click',e=>{
+      const t=document.querySelector(a.getAttribute('href'));
+      if(!t) return; e.preventDefault();
+      window.scrollTo({top:t.getBoundingClientRect().top+window.scrollY-72,behavior:'smooth'});
+    });
+  });
+
+  /* ─── Mouse Parallax Hero ─── */
+  const ph=document.getElementById('parallax-hero');
+  if(ph) document.addEventListener('mousemove',e=>{
+    const rx=(e.clientX/window.innerWidth-.5)*16;
+    const ry=(e.clientY/window.innerHeight-.5)*11;
+    ph.style.transform=`translate(${rx}px,${ry}px)`;
+  },{passive:true});
+
+  /* ─── Contact Form ─── */
+  function handleFormSubmit(e){
+    e.preventDefault();
+    document.getElementById('contactForm').style.display='none';
+    document.getElementById('formSuccess').style.display='block';
+  }
+
+  /* ─── Flashlight ─── */
+  (function(){
+    const fl = document.getElementById('flashlight');
+    let raf = null;
+    document.addEventListener('mousemove', e => {
+      if (raf) cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        fl.style.background =
+          `radial-gradient(circle 480px at ${e.clientX}px ${e.clientY}px,` +
+          ' transparent 0%, rgba(5,10,22,0.78) 65%)';
+      });
+    }, { passive: true });
+    document.addEventListener('mouseleave', () => {
+      fl.style.background = 'var(--fl-color)';
+    });
+  })();
+
+
+  /* ─── Theme Toggle ─── */
+  (function(){
+    const html       = document.documentElement;
+    const btnD       = document.getElementById('themeToggle');
+    const btnM       = document.getElementById('themeToggleMobile');
+    const sunD       = document.getElementById('iconSun');
+    const moonD      = document.getElementById('iconMoon');
+    const sunM       = document.getElementById('iconSunMobile');
+    const moonM      = document.getElementById('iconMoonMobile');
+    const label      = document.getElementById('themeLabel');
+
+    function applyTheme(light) {
+      html.classList.toggle('light', light);
+      if (sunD)  sunD.style.display  = light ? 'none'   : 'inline';
+      if (moonD) moonD.style.display = light ? 'inline' : 'none';
+      if (sunM)  sunM.style.display  = light ? 'none'   : 'inline';
+      if (moonM) moonM.style.display = light ? 'inline' : 'none';
+      if (label) label.textContent   = light ? 'Dark Mode' : 'Light Mode';
+      localStorage.setItem('theme', light ? 'light' : 'dark');
+    }
+
+    if (btnD)  btnD.addEventListener('click',  () => applyTheme(!html.classList.contains('light')));
+    if (btnM)  btnM.addEventListener('click',  () => applyTheme(!html.classList.contains('light')));
+
+    // Restore saved preference
+    applyTheme(localStorage.getItem('theme') === 'light');
+  })();
+
+</script>
+
 </body>
 </html>
