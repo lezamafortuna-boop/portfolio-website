@@ -111,3 +111,44 @@
   padding-bottom: 40px;
   border-bottom: 1px solid rgba(255,255,255,0.2);
 }
+
+.contact-cards {
+  margin-top: 20px;
+}
+
+.contact-card {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 25px 20px;
+  margin: 15px auto;
+  border-radius: 10px;
+  color: #ffffff;
+  transition: all 0.3s ease;
+  max-width: 350px;
+}
+
+.contact-card:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-5px);
+}
+
+.contact-card span {
+  font-size: 30px;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.contact-card h4 {
+  margin-top: 10px;
+  font-weight: 700;
+}
+
+.contact-card a {
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.contact-card a:hover {
+  text-decoration: underline;
+  opacity: 0.9;
+}
