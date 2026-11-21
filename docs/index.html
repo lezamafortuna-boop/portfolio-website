@@ -952,8 +952,8 @@
         </div>
         <h3 class="font-display font-bold text-xl text-white mb-3">Mobile Development</h3>
         <p class="text-slate-400 text-[.88rem] leading-[1.8] mb-5 flex-1">
-          Native iOS apps built with React Native &amp; Expo &mdash;
-          from development to App Store distribution via EAS Build.
+          Native iOS &amp; Android apps built with React Native &amp; Expo &mdash;
+          from development to the App Store and Google Play via EAS Build.
         </p>
         <div class="space-y-3 mb-5">
           <div>
@@ -976,7 +976,7 @@
       </div>
 
       <!-- ── Red Seal Chef (photo) ── -->
-      <div class="glass-card rounded-2xl overflow-hidden relative group reveal d2 min-h-[220px]">
+      <div class="glass-card on-dark rounded-2xl overflow-hidden relative group reveal d2 min-h-[220px]">
         <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/18 to-transparent z-10"></div>
         <img src="./Images/food.jpg" alt="Culinary work"
              class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
@@ -1790,12 +1790,12 @@
 
     /* spotlight opacity when cursor is ON the page */
     const vignette = () => html.classList.contains('light')
-      ? 'rgba(180,160,230,0.52)'   /* day  — soft amethyst dim */
+      ? 'rgba(15,23,42,0.07)'     /* day  — faint ink vignette, keeps text crisp */
       : 'rgba(2,4,12,0.55)';       /* night — dark vignette (less aggressive) */
 
     /* uniform gentle dim used when cursor is OFF the page */
     const restDim = () => html.classList.contains('light')
-      ? 'rgba(180,160,230,0.18)'
+      ? 'rgba(15,23,42,0.02)'
       : 'rgba(2,4,12,0.18)';
 
     function draw(x, y) {
@@ -1830,53 +1830,80 @@
   /* ─── Light Mode Stylesheet (injected after Tailwind) ─── */
   (function(){
     const LIGHT_CSS = `
-      html.light { --bg:#f3eeff; --card-bg:rgba(255,255,255,0.92); --border:rgba(109,40,217,0.13); --border-hover:rgba(109,40,217,0.32); --fl-color:rgba(230,220,255,0.60); }
-      html.light body { background-color:#f3eeff !important; color:#1a082e !important; }
-      html.light .grid-bg { background-image: linear-gradient(rgba(109,40,217,.038) 1px,transparent 1px), linear-gradient(90deg,rgba(109,40,217,.038) 1px,transparent 1px) !important; }
-      html.light .hero-glow { background: radial-gradient(ellipse 80% 50% at 50% -5%,rgba(124,58,237,.14) 0%,transparent 60%), radial-gradient(ellipse 50% 40% at 85% 78%,rgba(16,185,129,.09) 0%,transparent 55%) !important; }
-      html.light .glass { background:rgba(255,255,255,.78) !important; border-color:rgba(109,40,217,.16) !important; }
-      html.light .glass-card { background:rgba(255,255,255,.92) !important; border-color:rgba(109,40,217,.14) !important; }
-      html.light .glass-card:hover { background:rgba(109,40,217,.04) !important; border-color:rgba(109,40,217,.30) !important; box-shadow:0 24px 56px rgba(109,40,217,.10),0 0 0 1px rgba(109,40,217,.07) !important; }
-      html.light .project-card { background:rgba(255,255,255,.92) !important; border-color:rgba(109,40,217,.14) !important; }
-      html.light .project-card:hover { border-color:rgba(109,40,217,.28) !important; box-shadow:0 28px 60px rgba(109,40,217,.10),0 0 0 1px rgba(109,40,217,.07) !important; }
-      html.light #lkl-expertise-card { background:linear-gradient(135deg,rgba(180,100,0,.07),rgba(255,255,255,.95)) !important; border-color:rgba(180,100,0,.22) !important; }
-      html.light .proj-placeholder { background:rgba(255,255,255,.55) !important; border-color:rgba(109,40,217,.18) !important; }
-      html.light .gradient-text { background:linear-gradient(135deg,#7c3aed 0%,#059669 100%) !important; -webkit-background-clip:text !important; -webkit-text-fill-color:transparent !important; background-clip:text !important; }
-      html.light .gradient-text-anim { background:linear-gradient(135deg,#7c3aed,#059669,#3b82f6,#7c3aed) !important; background-size:300% 300% !important; -webkit-background-clip:text !important; -webkit-text-fill-color:transparent !important; background-clip:text !important; animation:grad-shift 6s ease infinite !important; }
-      html.light .text-white  { color:#1a082e !important; }
-      html.light .text-slate-300 { color:#3b1f60 !important; }
-      html.light .text-slate-400 { color:#6b5490 !important; }
-      html.light .text-slate-500 { color:#7d648a !important; }
-      html.light .text-slate-600 { color:#9980aa !important; }
-      html.light .text-slate-700 { color:#a890b8 !important; }
+      /* -- Light theme: cool paper background, ink text, indigo accent -- */
+      html.light { --bg:#f6f7fb; --card-bg:#ffffff; --border:rgba(15,23,42,0.09); --border-hover:rgba(67,56,202,0.35); --fl-color:rgba(15,23,42,0.05); }
+      html.light body { background-color:#f6f7fb !important; color:#1e293b !important; }
+      html.light .grid-bg { background-image: linear-gradient(rgba(15,23,42,.035) 1px,transparent 1px), linear-gradient(90deg,rgba(15,23,42,.035) 1px,transparent 1px) !important; }
+      html.light .hero-glow { background: radial-gradient(ellipse 80% 50% at 50% -5%,rgba(79,70,229,.10) 0%,transparent 60%), radial-gradient(ellipse 50% 40% at 85% 78%,rgba(5,150,105,.06) 0%,transparent 55%) !important; }
+
+      /* Surfaces */
+      html.light .glass { background:rgba(255,255,255,.92) !important; border-color:rgba(15,23,42,.10) !important; box-shadow:0 1px 2px rgba(15,23,42,.04); }
+      html.light .glass-card { background:#ffffff !important; border-color:rgba(15,23,42,.09) !important; box-shadow:0 1px 3px rgba(15,23,42,.05),0 8px 24px rgba(15,23,42,.04) !important; }
+      html.light .glass-card:hover { background:#ffffff !important; border-color:rgba(67,56,202,.28) !important; box-shadow:0 18px 44px rgba(15,23,42,.09),0 0 0 1px rgba(67,56,202,.06) !important; }
+      html.light .project-card { background:#ffffff !important; border-color:rgba(15,23,42,.09) !important; box-shadow:0 1px 3px rgba(15,23,42,.05),0 8px 24px rgba(15,23,42,.04) !important; }
+      html.light .project-card:hover { border-color:rgba(67,56,202,.28) !important; box-shadow:0 22px 50px rgba(15,23,42,.10),0 0 0 1px rgba(67,56,202,.06) !important; }
+      html.light .proj-overlay { background:linear-gradient(to top,rgba(15,23,42,.22) 0%,transparent 55%) !important; }
+      html.light #lkl-company-card { background:linear-gradient(135deg,#eef2ff 0%,#ffffff 55%) !important; border-color:rgba(67,56,202,.20) !important; }
+      html.light #lkl-expertise-card { background:linear-gradient(135deg,#fff7ed,#ffffff) !important; border-color:rgba(180,83,9,.18) !important; }
+      html.light .proj-placeholder { background:rgba(255,255,255,.7) !important; border-color:rgba(15,23,42,.14) !important; }
+      html.light .divider { background:linear-gradient(to right,transparent,rgba(15,23,42,.10),transparent) !important; }
+      html.light footer { border-color:rgba(15,23,42,.08) !important; }
+
+      /* Text: ink scale with real contrast on white */
+      html.light .text-white     { color:#0f172a !important; }
+      html.light .text-slate-200,
+      html.light .text-slate-300 { color:#1e293b !important; }
+      html.light .text-slate-400 { color:#334155 !important; }
+      html.light .text-slate-500 { color:#475569 !important; }
+      html.light .text-slate-600,
+      html.light .text-slate-700 { color:#64748b !important; }
+      html.light [class*='text-blue-']    { color:#1d4ed8 !important; }
+      html.light [class*='text-violet-'],
+      html.light [class*='text-purple-']  { color:#5b21b6 !important; }
+      html.light [class*='text-emerald-'] { color:#047857 !important; }
+      html.light [class*='text-amber-']   { color:#047857 !important; }
+      html.light .highlight-strong { color:#1d4ed8 !important; }
+      html.light .gradient-text { background:linear-gradient(135deg,#4338ca 0%,#047857 100%) !important; -webkit-background-clip:text !important; -webkit-text-fill-color:transparent !important; background-clip:text !important; }
+      html.light .gradient-text-anim { background:linear-gradient(135deg,#4338ca,#047857,#1d4ed8,#4338ca) !important; background-size:300% 300% !important; -webkit-background-clip:text !important; -webkit-text-fill-color:transparent !important; background-clip:text !important; }
+
+      /* Elements that sit on photos / dark panels keep light text */
+      html.light .on-dark .text-white { color:#ffffff !important; }
+      html.light .on-dark .text-slate-400 { color:#e2e8f0 !important; }
+
+      /* Buttons & nav */
       html.light .btn-primary, html.light .btn-primary * { color:#fff !important; -webkit-text-fill-color:#fff !important; }
-      html.light .section-label { color:#7c3aed !important; }
-      html.light .section-label::before { background:#7c3aed !important; }
-      html.light .nav-link { color:#6b5490 !important; }
-      html.light .nav-link:hover, html.light .nav-link.active { color:#1a082e !important; }
-      html.light .nav-link::after { background:#7c3aed !important; }
-      html.light #navbar.scrolled { background:rgba(240,234,255,.97) !important; }
-      html.light .tl-wrap::before { background:linear-gradient(to bottom,#7c3aed,rgba(124,58,237,0)) !important; }
-      html.light .tl-dot { background:#f3eeff !important; border-color:#7c3aed !important; box-shadow:0 0 14px rgba(124,58,237,.55),0 0 28px rgba(124,58,237,.2) !important; }
-      html.light .shimmer-line { background:linear-gradient(90deg,transparent,rgba(124,58,237,.5),rgba(5,150,105,.3),transparent) !important; background-size:200% 100% !important; }
-      html.light .skill-fill { background:linear-gradient(90deg,#7c3aed,#059669) !important; }
-      html.light .form-field { background:rgba(255,255,255,.88) !important; border-color:rgba(109,40,217,.18) !important; color:#1a082e !important; }
-      html.light .form-field::placeholder { color:#a890b8 !important; }
-      html.light .form-field:focus { border-color:rgba(109,40,217,.5) !important; box-shadow:0 0 0 3px rgba(109,40,217,.08) !important; background:#fff !important; }
-      html.light .divider { background:linear-gradient(to right,transparent,rgba(0,0,0,.08),transparent) !important; }
-      html.light footer { border-color:rgba(109,40,217,.1) !important; }
-      html.light ::-webkit-scrollbar-track { background:#f3eeff; }
-      html.light ::-webkit-scrollbar-thumb { background:#c4aee8; }
-      html.light ::-webkit-scrollbar-thumb:hover { background:#7c3aed; }
-      html.light .tag        { background:rgba(109,40,217,.09) !important; border-color:rgba(109,40,217,.24) !important; color:#5b21b6 !important; }
-      html.light .tag-green  { background:rgba(5,150,105,.09)  !important; border-color:rgba(5,150,105,.24)  !important; color:#065f46 !important; }
-      html.light .tag-amber  { background:rgba(5,150,105,.09)  !important; border-color:rgba(5,150,105,.24)  !important; color:#065f46 !important; }
-      html.light .dot-amber { background:#059669 !important; box-shadow:0 0 8px rgba(5,150,105,.8) !important; }
-      html.light [class*='text-amber-'] { color:#065f46 !important; }
-      html.light .tag-purple { background:rgba(109,40,217,.09) !important; border-color:rgba(109,40,217,.24) !important; color:#5b21b6 !important; }
-      html.light .highlight-strong { color:#0369a1 !important; }
-      html.light .orb, html.light .orb-2, html.light .orb-3 { opacity:0.4 !important; }
-      html.light .dot-live { background:#059669 !important; box-shadow:0 0 8px rgba(5,150,105,.8) !important; }
+      html.light .btn-outline { border-color:rgba(15,23,42,.18) !important; background:#ffffff !important; }
+      html.light .btn-outline:hover { border-color:rgba(67,56,202,.45) !important; background:#eef2ff !important; }
+      html.light .section-label { color:#4338ca !important; }
+      html.light .section-label::before { background:#4338ca !important; }
+      html.light .nav-link { color:#475569 !important; }
+      html.light .nav-link:hover, html.light .nav-link.active { color:#0f172a !important; }
+      html.light .nav-link::after { background:#4338ca !important; }
+      html.light #navbar { background:rgba(255,255,255,.85) !important; border-color:rgba(15,23,42,.08) !important; }
+      html.light #navbar.scrolled { background:rgba(255,255,255,.96) !important; box-shadow:0 1px 0 rgba(15,23,42,.06),0 6px 20px rgba(15,23,42,.05) !important; }
+
+      /* Timeline & skills */
+      html.light .tl-wrap::before { background:linear-gradient(to bottom,#4338ca,rgba(67,56,202,0)) !important; }
+      html.light .tl-dot { background:#ffffff !important; border-color:#4338ca !important; box-shadow:0 0 0 4px rgba(67,56,202,.12) !important; }
+      html.light .shimmer-line { background:linear-gradient(90deg,transparent,rgba(67,56,202,.45),rgba(4,120,87,.3),transparent) !important; background-size:200% 100% !important; }
+      html.light .skill-fill { background:linear-gradient(90deg,#4338ca,#047857) !important; }
+
+      /* Forms */
+      html.light .form-field { background:#ffffff !important; border-color:rgba(15,23,42,.16) !important; color:#0f172a !important; }
+      html.light .form-field::placeholder { color:#94a3b8 !important; }
+      html.light .form-field:focus { border-color:#4338ca !important; box-shadow:0 0 0 3px rgba(67,56,202,.12) !important; background:#fff !important; }
+
+      /* Tags */
+      html.light .tag        { background:#eef2ff !important; border-color:#c7d2fe !important; color:#3730a3 !important; }
+      html.light .tag-green,
+      html.light .tag-amber  { background:#ecfdf5 !important; border-color:#a7f3d0 !important; color:#065f46 !important; }
+      html.light .tag-purple { background:#f5f3ff !important; border-color:#ddd6fe !important; color:#5b21b6 !important; }
+      html.light .dot-live, html.light .dot-amber { background:#059669 !important; box-shadow:0 0 6px rgba(5,150,105,.6) !important; }
+
+      html.light .orb, html.light .orb-2, html.light .orb-3 { opacity:0.35 !important; }
+      html.light ::-webkit-scrollbar-track { background:#f6f7fb; }
+      html.light ::-webkit-scrollbar-thumb { background:#cbd5e1; }
+      html.light ::-webkit-scrollbar-thumb:hover { background:#4338ca; }
     `;
     let styleEl = null;
     window.__applyLightSheet = function(on) {
